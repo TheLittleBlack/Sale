@@ -1,0 +1,557 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DD484DF01FD3CCC400180A51 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DD484DEF1FD3CCC400180A51 /* AppDelegate.m */; };
+		DD484DF31FD3CCC400180A51 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD484DF21FD3CCC400180A51 /* ViewController.m */; };
+		DD484DF61FD3CCC400180A51 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD484DF41FD3CCC400180A51 /* Main.storyboard */; };
+		DD484DF81FD3CCC400180A51 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD484DF71FD3CCC400180A51 /* Assets.xcassets */; };
+		DD484DFB1FD3CCC400180A51 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD484DF91FD3CCC400180A51 /* LaunchScreen.storyboard */; };
+		DD484DFE1FD3CCC400180A51 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DD484DFD1FD3CCC400180A51 /* main.m */; };
+		DD484E081FD3CCC500180A51 /* Mayi_sales_appTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DD484E071FD3CCC500180A51 /* Mayi_sales_appTests.m */; };
+		DD484E131FD3CCC500180A51 /* Mayi_sales_appUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = DD484E121FD3CCC500180A51 /* Mayi_sales_appUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DD484E041FD3CCC500180A51 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD484DE31FD3CCC400180A51 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD484DEA1FD3CCC400180A51;
+			remoteInfo = Mayi_sales_app;
+		};
+		DD484E0F1FD3CCC500180A51 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD484DE31FD3CCC400180A51 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD484DEA1FD3CCC400180A51;
+			remoteInfo = Mayi_sales_app;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DD484DEB1FD3CCC400180A51 /* Mayi_sales_app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mayi_sales_app.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD484DEE1FD3CCC400180A51 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		DD484DEF1FD3CCC400180A51 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		DD484DF11FD3CCC400180A51 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		DD484DF21FD3CCC400180A51 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		DD484DF51FD3CCC400180A51 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DD484DF71FD3CCC400180A51 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DD484DFA1FD3CCC400180A51 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DD484DFC1FD3CCC400180A51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DD484DFD1FD3CCC400180A51 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		DD484E031FD3CCC500180A51 /* Mayi_sales_appTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Mayi_sales_appTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD484E071FD3CCC500180A51 /* Mayi_sales_appTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Mayi_sales_appTests.m; sourceTree = "<group>"; };
+		DD484E091FD3CCC500180A51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DD484E0E1FD3CCC500180A51 /* Mayi_sales_appUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Mayi_sales_appUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD484E121FD3CCC500180A51 /* Mayi_sales_appUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Mayi_sales_appUITests.m; sourceTree = "<group>"; };
+		DD484E141FD3CCC500180A51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DD484DE81FD3CCC400180A51 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD484E001FD3CCC500180A51 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD484E0B1FD3CCC500180A51 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DD484DE21FD3CCC400180A51 = {
+			isa = PBXGroup;
+			children = (
+				DD484DED1FD3CCC400180A51 /* Mayi_sales_app */,
+				DD484E061FD3CCC500180A51 /* Mayi_sales_appTests */,
+				DD484E111FD3CCC500180A51 /* Mayi_sales_appUITests */,
+				DD484DEC1FD3CCC400180A51 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DD484DEC1FD3CCC400180A51 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DD484DEB1FD3CCC400180A51 /* Mayi_sales_app.app */,
+				DD484E031FD3CCC500180A51 /* Mayi_sales_appTests.xctest */,
+				DD484E0E1FD3CCC500180A51 /* Mayi_sales_appUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DD484DED1FD3CCC400180A51 /* Mayi_sales_app */ = {
+			isa = PBXGroup;
+			children = (
+				DD484DEE1FD3CCC400180A51 /* AppDelegate.h */,
+				DD484DEF1FD3CCC400180A51 /* AppDelegate.m */,
+				DD484DF11FD3CCC400180A51 /* ViewController.h */,
+				DD484DF21FD3CCC400180A51 /* ViewController.m */,
+				DD484DF41FD3CCC400180A51 /* Main.storyboard */,
+				DD484DF71FD3CCC400180A51 /* Assets.xcassets */,
+				DD484DF91FD3CCC400180A51 /* LaunchScreen.storyboard */,
+				DD484DFC1FD3CCC400180A51 /* Info.plist */,
+				DD484DFD1FD3CCC400180A51 /* main.m */,
+			);
+			path = Mayi_sales_app;
+			sourceTree = "<group>";
+		};
+		DD484E061FD3CCC500180A51 /* Mayi_sales_appTests */ = {
+			isa = PBXGroup;
+			children = (
+				DD484E071FD3CCC500180A51 /* Mayi_sales_appTests.m */,
+				DD484E091FD3CCC500180A51 /* Info.plist */,
+			);
+			path = Mayi_sales_appTests;
+			sourceTree = "<group>";
+		};
+		DD484E111FD3CCC500180A51 /* Mayi_sales_appUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DD484E121FD3CCC500180A51 /* Mayi_sales_appUITests.m */,
+				DD484E141FD3CCC500180A51 /* Info.plist */,
+			);
+			path = Mayi_sales_appUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DD484DEA1FD3CCC400180A51 /* Mayi_sales_app */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD484E171FD3CCC500180A51 /* Build configuration list for PBXNativeTarget "Mayi_sales_app" */;
+			buildPhases = (
+				DD484DE71FD3CCC400180A51 /* Sources */,
+				DD484DE81FD3CCC400180A51 /* Frameworks */,
+				DD484DE91FD3CCC400180A51 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Mayi_sales_app;
+			productName = Mayi_sales_app;
+			productReference = DD484DEB1FD3CCC400180A51 /* Mayi_sales_app.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DD484E021FD3CCC500180A51 /* Mayi_sales_appTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD484E1A1FD3CCC500180A51 /* Build configuration list for PBXNativeTarget "Mayi_sales_appTests" */;
+			buildPhases = (
+				DD484DFF1FD3CCC500180A51 /* Sources */,
+				DD484E001FD3CCC500180A51 /* Frameworks */,
+				DD484E011FD3CCC500180A51 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD484E051FD3CCC500180A51 /* PBXTargetDependency */,
+			);
+			name = Mayi_sales_appTests;
+			productName = Mayi_sales_appTests;
+			productReference = DD484E031FD3CCC500180A51 /* Mayi_sales_appTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DD484E0D1FD3CCC500180A51 /* Mayi_sales_appUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD484E1D1FD3CCC500180A51 /* Build configuration list for PBXNativeTarget "Mayi_sales_appUITests" */;
+			buildPhases = (
+				DD484E0A1FD3CCC500180A51 /* Sources */,
+				DD484E0B1FD3CCC500180A51 /* Frameworks */,
+				DD484E0C1FD3CCC500180A51 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD484E101FD3CCC500180A51 /* PBXTargetDependency */,
+			);
+			name = Mayi_sales_appUITests;
+			productName = Mayi_sales_appUITests;
+			productReference = DD484E0E1FD3CCC500180A51 /* Mayi_sales_appUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DD484DE31FD3CCC400180A51 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0910;
+				ORGANIZATIONNAME = JayJay;
+				TargetAttributes = {
+					DD484DEA1FD3CCC400180A51 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+					};
+					DD484E021FD3CCC500180A51 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = DD484DEA1FD3CCC400180A51;
+					};
+					DD484E0D1FD3CCC500180A51 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = DD484DEA1FD3CCC400180A51;
+					};
+				};
+			};
+			buildConfigurationList = DD484DE61FD3CCC400180A51 /* Build configuration list for PBXProject "Mayi_sales_app" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DD484DE21FD3CCC400180A51;
+			productRefGroup = DD484DEC1FD3CCC400180A51 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DD484DEA1FD3CCC400180A51 /* Mayi_sales_app */,
+				DD484E021FD3CCC500180A51 /* Mayi_sales_appTests */,
+				DD484E0D1FD3CCC500180A51 /* Mayi_sales_appUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DD484DE91FD3CCC400180A51 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD484DFB1FD3CCC400180A51 /* LaunchScreen.storyboard in Resources */,
+				DD484DF81FD3CCC400180A51 /* Assets.xcassets in Resources */,
+				DD484DF61FD3CCC400180A51 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD484E011FD3CCC500180A51 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD484E0C1FD3CCC500180A51 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DD484DE71FD3CCC400180A51 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD484DF31FD3CCC400180A51 /* ViewController.m in Sources */,
+				DD484DFE1FD3CCC400180A51 /* main.m in Sources */,
+				DD484DF01FD3CCC400180A51 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD484DFF1FD3CCC500180A51 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD484E081FD3CCC500180A51 /* Mayi_sales_appTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD484E0A1FD3CCC500180A51 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD484E131FD3CCC500180A51 /* Mayi_sales_appUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DD484E051FD3CCC500180A51 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD484DEA1FD3CCC400180A51 /* Mayi_sales_app */;
+			targetProxy = DD484E041FD3CCC500180A51 /* PBXContainerItemProxy */;
+		};
+		DD484E101FD3CCC500180A51 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD484DEA1FD3CCC400180A51 /* Mayi_sales_app */;
+			targetProxy = DD484E0F1FD3CCC500180A51 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DD484DF41FD3CCC400180A51 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DD484DF51FD3CCC400180A51 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		DD484DF91FD3CCC400180A51 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DD484DFA1FD3CCC400180A51 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		DD484E151FD3CCC500180A51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		DD484E161FD3CCC500180A51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DD484E181FD3CCC500180A51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74897WDG2G;
+				INFOPLIST_FILE = Mayi_sales_app/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mayi-sales-app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DD484E191FD3CCC500180A51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74897WDG2G;
+				INFOPLIST_FILE = Mayi_sales_app/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mayi-sales-app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DD484E1B1FD3CCC500180A51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74897WDG2G;
+				INFOPLIST_FILE = Mayi_sales_appTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mayi-sales-appTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mayi_sales_app.app/Mayi_sales_app";
+			};
+			name = Debug;
+		};
+		DD484E1C1FD3CCC500180A51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74897WDG2G;
+				INFOPLIST_FILE = Mayi_sales_appTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mayi-sales-appTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mayi_sales_app.app/Mayi_sales_app";
+			};
+			name = Release;
+		};
+		DD484E1E1FD3CCC500180A51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74897WDG2G;
+				INFOPLIST_FILE = Mayi_sales_appUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mayi-sales-appUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Mayi_sales_app;
+			};
+			name = Debug;
+		};
+		DD484E1F1FD3CCC500180A51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 74897WDG2G;
+				INFOPLIST_FILE = Mayi_sales_appUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mayi-sales-appUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Mayi_sales_app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DD484DE61FD3CCC400180A51 /* Build configuration list for PBXProject "Mayi_sales_app" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD484E151FD3CCC500180A51 /* Debug */,
+				DD484E161FD3CCC500180A51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD484E171FD3CCC500180A51 /* Build configuration list for PBXNativeTarget "Mayi_sales_app" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD484E181FD3CCC500180A51 /* Debug */,
+				DD484E191FD3CCC500180A51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD484E1A1FD3CCC500180A51 /* Build configuration list for PBXNativeTarget "Mayi_sales_appTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD484E1B1FD3CCC500180A51 /* Debug */,
+				DD484E1C1FD3CCC500180A51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD484E1D1FD3CCC500180A51 /* Build configuration list for PBXNativeTarget "Mayi_sales_appUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD484E1E1FD3CCC500180A51 /* Debug */,
+				DD484E1F1FD3CCC500180A51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DD484DE31FD3CCC400180A51 /* Project object */;
+}
