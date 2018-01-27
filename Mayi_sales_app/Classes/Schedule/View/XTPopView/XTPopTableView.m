@@ -66,6 +66,7 @@
     cell.textLabel.numberOfLines = 0;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.textColor = self.titleTextColor;
+    cell.separatorInset = UIEdgeInsetsMake(0, 12, 0, 12);
     
     if (self.dataArray.count == 1) {
         self.tableView.bounces = NO;

@@ -10,4 +10,10 @@
 
 @interface CustomerVisitFirstTableViewCell : UITableViewCell
 
+@property(nonatomic,strong)UIImageView *iconImageView; // 小图标
+@property(nonatomic,strong)UILabel *titleLabel; // 标题
+@property(nonatomic,strong)UILabel *describeLabel; // 描述
+@property(nonatomic,strong)UIImageView *gotoImageView;
+@property(nonatomic,strong)UIView *underLineView;
+
 @end

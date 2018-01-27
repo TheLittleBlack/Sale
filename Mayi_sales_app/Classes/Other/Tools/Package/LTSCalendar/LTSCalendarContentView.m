@@ -107,7 +107,7 @@
 //   self.collectionView.contentInset = UIEdgeInsetsMake(0, 0,(singleWeek ? appearance.weekDayHeight*(appearance.weeksToDisplay-1) : 0), 0);
     beginWeekIndexPath = nil;
  
-    [self getDateDatasisScroll:NO];
+    [self getDateDatasisScroll:YES];
     [UIView performWithoutAnimation:^{
         [self.collectionView reloadData];
     }];
@@ -352,9 +352,12 @@
         
     }
     
-    if (self.eventSource && [self.eventSource respondsToSelector:@selector(calendarDidSelectedDate:)]) {
-        [self.eventSource calendarDidSelectedDate:self.currentDate];
+    if (![LTSCalendarAppearance share].isShowSingleWeek && !isScroll) {
+        if (self.eventSource && [self.eventSource respondsToSelector:@selector(calendarDidSelectedDate:)]) {
+            [self.eventSource calendarDidSelectedDate:self.currentDate];
+        }
     }
+
     
     if(!isScroll)
     {

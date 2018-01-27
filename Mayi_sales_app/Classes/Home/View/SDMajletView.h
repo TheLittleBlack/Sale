@@ -9,45 +9,28 @@
 #pragma mark - 杉德子件View
 #import <UIKit/UIKit.h>
 
-typedef void(^SDMajletBlock)(NSMutableArray *inusesTitles , NSMutableArray *unusesTitles);
+typedef void(^SDMajletBlock)(NSMutableArray *inusesTitles);
+
+@protocol SDMajletViewDelegate <NSObject>
+
+-(void)newData:(NSMutableArray *)inUseTitles;
+
+-(void)selectItem:(NSIndexPath *)indexPath;
+
+@end
 
 @interface SDMajletView : UIView
 
-
-
-/**
- 上半部分数组
- */
 @property (nonatomic, strong) NSMutableArray *inUseTitles;
 
-/**
- 下半部分数组
- */
-@property (nonatomic,strong) NSMutableArray *unUseTitles;
-
-
-/**
- 回调block
- */
 @property (nonatomic, weak)SDMajletBlock block;
 
+@property(nonatomic,weak)id <SDMajletViewDelegate> delegate;
 
 
-/**
- 初始化
- 
- @param frame frame
- @return SDMajletView实例
- */
 - (instancetype)initWithFrame:(CGRect)frame;
 
-
-
-/**
- 回调方法返回上下数组
-
- @param block 代码块
- */
+ // 返回新数组
 - (void)callBacktitlesBlock:(SDMajletBlock)block;
 
 

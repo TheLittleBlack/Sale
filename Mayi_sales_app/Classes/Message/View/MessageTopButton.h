@@ -10,4 +10,6 @@
 
 @interface MessageTopButton : UIButton
 
+@property(nonatomic,strong)UILabel *myTitle;
+
 @end

@@ -11,9 +11,8 @@
 //#import "SDMajletCellHead.h"
 
 #define ViewSize self.bounds
-static CGFloat margSpaceX = 10.0f;  //cell间距x
-static CGFloat margSpaceY = 8.0f;  //cell间距y
-static CGFloat columnNumber = 4.0f;// cell 列数
+static CGFloat margSpaceX = 0.0f;  //cell间距x
+static CGFloat margSpaceY = 4.0f;  //cell间距y
 
 
 @interface SDMajletView()<UICollectionViewDelegate,UICollectionViewDataSource>{
@@ -41,7 +40,44 @@ static CGFloat columnNumber = 4.0f;// cell 列数
 - (instancetype)initWithFrame:(CGRect)frame{
     
     if (self = [super initWithFrame:frame]) {
-        [self createUI];
+        
+        //flowLayout布局
+        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+        CGFloat cellWith = ScreenWidth/3;
+        //cell size
+        
+        //布局item大小
+        flowLayout.itemSize = CGSizeMake(cellWith, cellWith);
+        //布局边距
+        flowLayout.sectionInset = UIEdgeInsetsMake(margSpaceY, margSpaceX, margSpaceY, margSpaceX);
+        //布局最小行间距
+        flowLayout.minimumLineSpacing = margSpaceY;
+        //布局最小列间距
+        flowLayout.minimumInteritemSpacing = margSpaceX;
+        //布局头部viewSize
+        flowLayout.headerReferenceSize = CGSizeMake(ViewSize.size.width, 31);
+        
+        _collectionView = [[UICollectionView alloc] initWithFrame:ViewSize collectionViewLayout:flowLayout];
+        _collectionView.showsHorizontalScrollIndicator = YES;
+        _collectionView.backgroundColor = [UIColor whiteColor];
+        //复用ID必须和代理中的ID一致
+        [_collectionView registerClass:[SDMajletCell class] forCellWithReuseIdentifier:@"SDMajletCell"];
+        
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        [self addSubview:_collectionView];
+        
+#pragma mark - 创建一个单独的(瓷砖)cell用于跟随手势拖动
+        _dragingCell = [[SDMajletCell alloc] initWithFrame:CGRectMake(0, 0, flowLayout.itemSize.width, flowLayout.itemSize.height)];
+        _dragingCell.hidden = YES;
+        [self addSubview:_dragingCell];
+        
+        
+#pragma mark - 创建长按拖动手势
+        UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressMethod:)];
+        longPressGesture.minimumPressDuration = 0.5f;
+        [_collectionView addGestureRecognizer:longPressGesture];
+        
     }
     return self;
     
@@ -49,49 +85,7 @@ static CGFloat columnNumber = 4.0f;// cell 列数
 
 
 
-- (void)createUI{
-#pragma mark - 创建collectionView
-    //flowLayout布局
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    CGFloat spaceCount = columnNumber + 1 ; //(间隙count永远比列数多1)
-    CGFloat cellWith = (self.bounds.size.width - spaceCount*margSpaceX)/columnNumber;
-    //cell size
-    UIImage *iconImag = [UIImage imageNamed:@"more"];
-    //布局item大小
-    flowLayout.itemSize = CGSizeMake(cellWith, iconImag.size.height*2);
-    //布局边距
-    flowLayout.sectionInset = UIEdgeInsetsMake(margSpaceY, margSpaceX, margSpaceY, margSpaceX);
-    //布局最小行间距
-    flowLayout.minimumLineSpacing = margSpaceY;
-    //布局最小列间距
-    flowLayout.minimumInteritemSpacing = margSpaceX;
-    //布局头部viewSize
-    flowLayout.headerReferenceSize = CGSizeMake(ViewSize.size.width, 44);
-    
-    _collectionView = [[UICollectionView alloc] initWithFrame:ViewSize collectionViewLayout:flowLayout];
-    _collectionView.showsHorizontalScrollIndicator = YES;
-    _collectionView.backgroundColor = [UIColor whiteColor];
-    //复用ID必须和代理中的ID一致
-    [_collectionView registerClass:[SDMajletCell class] forCellWithReuseIdentifier:@"SDMajletCell"];
 
-    _collectionView.delegate = self;
-    _collectionView.dataSource = self;
-    [self addSubview:_collectionView];
-    
-#pragma mark - 创建一个单独的(瓷砖)cell用于跟随手势拖动
-    _dragingCell = [[SDMajletCell alloc] initWithFrame:CGRectMake(0, 0, flowLayout.itemSize.width, flowLayout.itemSize.height)];
-    _dragingCell.hidden = YES;
-    [self addSubview:_dragingCell];
-    
-    
-#pragma mark - 创建长按拖动手势
-    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressMethod:)];
-    longPressGesture.minimumPressDuration = 0.3f;
-    [_collectionView addGestureRecognizer:longPressGesture];
-    
-    
-    
-}
 #pragma mark - 长按手势方法
 -(void)longPressMethod:(UILongPressGestureRecognizer*)gesture{
     
@@ -187,6 +181,8 @@ static CGFloat columnNumber = 4.0f;// cell 列数
         cell.isMoving = NO;
         
         
+        
+        
     }];
 }
 
@@ -245,7 +241,7 @@ static CGFloat columnNumber = 4.0f;// cell 列数
     return 2;
 }
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return section ==0 ? _inUseTitles.count:_unUseTitles.count;
+    return section ==0 ? _inUseTitles.count:0;
 }
 
 
@@ -256,18 +252,20 @@ static CGFloat columnNumber = 4.0f;// cell 列数
     static NSString *cellID = @"SDMajletCell";
     SDMajletCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
     cell.font = 13;
-    cell.iconName = indexPath.section == 0? [_inUseTitles[indexPath.row] objectForKey:@"iconName"]: [_unUseTitles[indexPath.row] objectForKey:@"iconName"];
-    cell.title = indexPath.section == 0? [_inUseTitles[indexPath.row] objectForKey:@"title"] : [_unUseTitles[indexPath.row] objectForKey:@"title"];
+    cell.iconName = indexPath.section == 0? [_inUseTitles[indexPath.row] objectForKey:@"iconName"]: NULL;
+    cell.title = indexPath.section == 0? [_inUseTitles[indexPath.row] objectForKey:@"title"] : NULL;
+
     
     return cell;
     
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
-    NSLog(@"喵");
-    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(selectItem:)]){
+        [self.delegate selectItem:indexPath];
+    }
 }
+
 
 #pragma mark - 交换数组中的数据
 -(void)uplogadInusesTitles{
@@ -276,6 +274,9 @@ static CGFloat columnNumber = 4.0f;// cell 列数
     [_inUseTitles removeObject:obj];
     [_inUseTitles insertObject:obj atIndex:_dragingToindexPaht.row];
     
+    if(self.delegate && [self.delegate respondsToSelector:@selector(newData:)]){
+        [self.delegate newData:_inUseTitles];
+    }
 }
 
 
@@ -289,7 +290,7 @@ static CGFloat columnNumber = 4.0f;// cell 列数
     
     _block = block;
     
-    _block(_inUseTitles,_unUseTitles);
+    _block(_inUseTitles);
     
 }
 

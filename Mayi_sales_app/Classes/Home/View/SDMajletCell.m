@@ -28,9 +28,6 @@
 
 -(void)buidUI{
     
-    self.layer.cornerRadius = 5.0f;
-    self.layer.masksToBounds = YES;
-    
     
     iconImageView = [[UIImageView alloc] init];
     [self addSubview:iconImageView];
@@ -66,9 +63,9 @@
     
     CGSize size = self.bounds.size;
     iconImageView.frame = CGRectMake(0, 0, image.size.width,image.size.height);
-    iconImageView.center = CGPointMake(self.bounds.size.width/2, image.size.height/2);
-    titleLab.frame = CGRectMake(0, iconImageView.frame.size.height, size.width, size.height-image.size.height);
-    
+    iconImageView.center = CGPointMake(size.width/2, image.size.height/2);
+    titleLab.frame = CGRectMake(0, iconImageView.frame.size.height, size.width, (size.height-image.size.height)/1.5);
+
 }
 
 

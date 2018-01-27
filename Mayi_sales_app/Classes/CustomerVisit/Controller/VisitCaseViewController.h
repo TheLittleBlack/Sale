@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+// 拜访情况
 @interface VisitCaseViewController : UIViewController
+
+@property(nonatomic,strong)NSDictionary *visitData;
+@property(nonatomic,strong)NSString *visitID;
+@property(nonatomic,strong)NSString *saveLogContent;
+@property(nonatomic,strong)NSString *saveVisitPhoto;
 
 @end

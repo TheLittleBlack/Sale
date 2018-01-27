@@ -1,0 +1,16 @@
+platform :ios, '9.0'
+target 'Mayi_sales_app' do
+pod 'AFNetworking', '~> 3.1.0'
+pod 'MJExtension', '~> 3.0.13'
+pod 'SDWebImage', '~> 4.2.1'
+pod 'SVProgressHUD', '~> 2.2.2'
+pod 'MJRefresh', '~> 3.1.15'
+pod 'Masonry', '~> 1.1.0'
+pod 'MBProgressHUD', '~> 1.0.0'
+pod 'JTCalendar', '~> 2.0'
+pod 'AMap3DMap', '~> 5.4.0'
+pod 'AMapSearch', '~> 5.4.0'
+pod 'UMessage_NOIDFA', '~> 1.5.3'
+pod 'BuglyHotfix'
+pod 'JSPatch'
+end

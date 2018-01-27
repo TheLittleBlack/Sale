@@ -10,4 +10,9 @@
 
 @interface SignAddressTableViewCell : UITableViewCell
 
+@property(nonatomic,strong)UILabel *firstLabel;
+@property(nonatomic,strong)UILabel *secondLabel;
+@property(nonatomic,strong)UILabel *distanceLabel;
+@property(nonatomic,strong)UIImageView *selectImageView;
+
 @end

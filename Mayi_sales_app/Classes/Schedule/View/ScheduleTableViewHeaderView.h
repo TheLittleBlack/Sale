@@ -10,4 +10,9 @@
 
 @interface ScheduleTableViewHeaderView : UITableViewHeaderFooterView
 
+@property(nonatomic,strong)UILabel *firstLabel;
+@property(nonatomic,strong)UILabel *secondLabel;
+@property(nonatomic,strong)UILabel *dateLabel;
+@property(nonatomic,strong)UIView *topView;
+
 @end

@@ -14,24 +14,35 @@
 
 @implementation UpdateViewController
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = NO;
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+//开始加载
+- (void)webViewDidStartLoad:(UIWebView *)webView
+{
+    self.navigationController.navigationBar.hidden = NO;
+    MyLog(@"开始加载");
+    
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+//加载完成
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    MyLog(@"加载完成");
+    self.navigationController.navigationBar.hidden = NO;
+    [Hud stop];
+    
 }
-*/
+
 
 @end

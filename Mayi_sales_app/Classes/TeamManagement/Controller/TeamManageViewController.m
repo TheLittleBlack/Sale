@@ -7,31 +7,77 @@
 //
 
 #import "TeamManageViewController.h"
+#import "SignInViewController.h"
+#import <JavaScriptCore/JavaScriptCore.h>
 
 @interface TeamManageViewController ()
 
+@property(nonatomic,strong)NSString *cloudId;
+@property(nonatomic,strong)NSString *userId;
+@property(nonatomic,strong)NSString *type;
+
 @end
+
 
 @implementation TeamManageViewController
 
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    [self.webView reload];
+//}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    
+    
+    
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+//加载完成
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    MyLog(@"加载完成");
+    [Hud stop];
+    
+
+    
+    JSContext *context=[webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    // 获取js调用的方法
+    context[@"getVisitInfo"] = ^(){
+        
+        NSArray *args = [JSContext currentArguments];
+        
+        self.cloudId = [args[0] toString];
+        self.userId = [args[1] toString];
+        self.type = [args[2] toString];
+        
+    };
+    
+
+    
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)urlActionType:(NSString *)actionString
+{
+
+    
+    if([actionString isEqualToString:@"toSign"])
+    {
+        
+        SignInViewController *SVC = [SignInViewController new];
+        SVC.visitID = self.cloudId;
+        SVC.type = [self.type integerValue];
+        SVC.businessKey = [self.cloudId integerValue];
+        [self.navigationController pushViewController:SVC animated:YES];
+        
+    }
+    
+    
 }
-*/
+
 
 @end

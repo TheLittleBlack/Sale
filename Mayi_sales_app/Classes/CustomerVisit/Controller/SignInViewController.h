@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+// 签到
+
 @interface SignInViewController : UIViewController
+
+@property(nonatomic,strong)NSString *visitID;
+@property(nonatomic,assign)NSInteger type;
+@property(nonatomic,assign)NSInteger businessKey;
+@property(nonatomic,assign)BOOL isFirst;
+@property(nonatomic,strong)NSString *storeName;
 
 @end

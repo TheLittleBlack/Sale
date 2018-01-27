@@ -12,6 +12,11 @@
 @interface LTSCalendarScrollView : UIScrollView
 @property (nonatomic,strong)UITableView *tableView;
 @property (nonatomic,strong)LTSCalendarContentView *calendarView;
+@property (nonatomic,strong)NSMutableArray *dataSourceArray;
+@property (nonatomic,strong)NSString *selectDateString;
+@property (nonatomic,assign)NSInteger noFinishCount;
+@property (nonatomic,assign)BOOL showBeginButton;
+@property (nonatomic,strong)UIViewController *currentVC;
 
 @property (nonatomic,strong)UIColor *bgColor;
 - (void)scrollToSingleWeek;

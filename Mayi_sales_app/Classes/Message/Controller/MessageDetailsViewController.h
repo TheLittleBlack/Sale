@@ -10,4 +10,7 @@
 
 @interface MessageDetailsViewController : UIViewController
 
+@property(nonatomic,strong)NSString *titleText;
+@property(nonatomic,assign)NSInteger type;
+
 @end

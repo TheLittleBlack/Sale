@@ -8,17 +8,9 @@
 
 #import "ScanQRCodeViewController.h"
 #import <AVFoundation/AVFoundation.h>
-#import "UIBarButtonItem+customItem.h"
 
-/**
- *  屏幕 高 宽 边界
- */
-#define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
-#define SCREEN_WIDTH  [UIScreen mainScreen].bounds.size.width
-#define SCREEN_BOUNDS  [UIScreen mainScreen].bounds
-
-#define TOP (SCREEN_HEIGHT-220)/2
-#define LEFT (SCREEN_WIDTH-220)/2
+#define TOP (ScreenHeight-220)/2
+#define LEFT (ScreenWidth-220)/2
 
 #define kScanRect CGRectMake(LEFT, TOP, 220, 220)
 
@@ -47,9 +39,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [SVProgressHUD showWithStatus:nil];
-    
-    self.title = @"扫一扫";
+    [Hud showLoading];
+    self.navigationItem.title = @"扫一扫";
     
     self.view.backgroundColor = [UIColor blackColor];
     
@@ -60,9 +51,9 @@
 
 -(void)setBarButtonItem
 {
-    self.navigationItem.leftBarButtonItem = [UIBarButtonItem BackButtonItemWithTarget:self action:@selector(back)];
+
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"image222"] style:UIBarButtonItemStylePlain target:self action:@selector(choosePicture)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[[UIImage imageNamed:@"icon_fanghui"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
     
     
 }
@@ -162,7 +153,7 @@
             
         }]];
         [self presentViewController:alert animated:YES completion:nil];
-        [SVProgressHUD dismiss];
+        [Hud stop];
         return;
     }
     
@@ -178,10 +169,10 @@
     [_output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
     
     //设置扫描区域
-    CGFloat top = TOP/SCREEN_HEIGHT;
-    CGFloat left = LEFT/SCREEN_WIDTH;
-    CGFloat width = 220/SCREEN_WIDTH;
-    CGFloat height = 220/SCREEN_HEIGHT;
+    CGFloat top = TOP/ScreenHeight;
+    CGFloat left = LEFT/ScreenWidth;
+    CGFloat width = 220/ScreenWidth;
+    CGFloat height = 220/ScreenHeight;
     ///top 与 left 互换  width 与 height 互换
     [_output setRectOfInterest:CGRectMake(top,left, height, width)];
     
@@ -217,7 +208,7 @@
         isAddView = YES;
     }
     
-    [SVProgressHUD dismiss];
+    [Hud stop];
 
    
 }
@@ -256,155 +247,9 @@
     //将json转成字符串
     NSData *jsonData = [QRString dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+    MyLog(@"%@",dictionary);
     
     
-    // 如果二维码信息中不包含isBussiness 暂且认为此二维码不是爱云起二维码
-    if(dictionary[@"isBussiness"]==nil)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"此二维码不是爱云起二维码" preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            
-
-            [self.navigationController popViewControllerAnimated:YES];
-            
-        }]];
-        [self presentViewController:alert animated:YES completion:nil];
-        
-    }
-    //如果是爱云起二维码
-    else
-    {
-        //商家扫
-        if([[AYQManage defaultManager].type integerValue]==2)
-        {
-            // isBussiness的值为0 代表此二维码只有买家能扫  isBussiness的值为1 代表此二维码只有商家能扫
-            if([dictionary[@"isBussiness"] integerValue]==0)
-            {
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"请使用买家账号扫描此二维码" preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    
-                    if (_session != nil && timer != nil) {
-                        [_session startRunning];
-                        [timer setFireDate:[NSDate date]];
-                    }
-                    
-                }]];
-                [self presentViewController:alert animated:YES completion:nil];
-            }
-            else if([dictionary[@"isBussiness"] integerValue]==1)
-            {
-                
-                [MyNetworkRequest postRequestWithUrl:[AYQURLManage AYQURLManageWithURL:UseCouponsURL] withPrameters:@{@"name":dictionary[@"name"],@"springId":dictionary[@"springId"],@"sellerName":[AYQManage defaultManager].phoneNumber} result:^(id result) {
-                    
-                    MyLog(@"%@",result);
-                    
-                    //扫描成功
-                    if([result[@"ok"] integerValue]==1)
-                    {
-                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"扫描结果" message:result[@"message"] preferredStyle:UIAlertControllerStyleAlert];
-                        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                            
-                            [self.navigationController popViewControllerAnimated:YES];
-                            
-                        }]];
-                        [self presentViewController:alert animated:YES completion:nil];
-                    }
-                    //扫描失败(可能原因：当天同一张温泉票只能使用一次)
-                    else
-                    {
-                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"扫描结果" message:result[@"message"] preferredStyle:UIAlertControllerStyleAlert];
-                        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                            
-                            if (_session != nil && timer != nil) {
-                                [_session startRunning];
-                                [timer setFireDate:[NSDate date]];
-                            }
-                            
-                        }]];
-                        [self presentViewController:alert animated:YES completion:nil];
-                    }
-                    
-                } error:^(id error) {
-                    
-                } withHUD:YES];
-                
-            }
-            
-        }
-        //买家扫
-        else if([[AYQManage defaultManager].type integerValue]==1)
-        {
-            if([dictionary[@"isBussiness"] integerValue]==1)
-            {
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"请使用商家账号扫描此二维码" preferredStyle:UIAlertControllerStyleAlert];
-                [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    
-                    if (_session != nil && timer != nil) {
-                        [_session startRunning];
-                        [timer setFireDate:[NSDate date]];
-                    }
-                    
-                }]];
-                [self presentViewController:alert animated:YES completion:nil];
-            }
-            else if([dictionary[@"isBussiness"] integerValue]==0)
-            {
-                CGFloat price = [dictionary[@"price"] floatValue];
-                NSString *priceString = [NSString stringWithFormat:@"%.02f",price];
-                NSString *lastStr = [priceString substringFromIndex:priceString.length-1];
-                if([lastStr isEqualToString:@"0"])
-                {
-                    priceString = [NSString stringWithFormat:@"%.01f",price];
-                }
-                
-                [MyNetworkRequest postRequestWithUrl:[AYQURLManage AYQURLManageWithURL:PayURL] withPrameters:@{@"userName":[AYQManage defaultManager].phoneNumber,@"price":priceString,@"sellerName":dictionary[@"sellerName"]} result:^(id result) {
-                    
-                    MyLog(@"%@",result);
-                    
-                    //扫描成功
-                    if([result[@"ok"] integerValue]==1)
-                    {
-                        //更新余额
-                        CGFloat currentBalance = [[AYQManage defaultManager].currentBalance floatValue] - price;
-                        [AYQManage defaultManager].currentBalance = [NSString stringWithFormat:@"%.02f",currentBalance];
-                        
-                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"扫描结果" message:[NSString stringWithFormat:@"%@\n本次支付:%@元",result[@"message"],dictionary[@"price"]] preferredStyle:UIAlertControllerStyleAlert];
-                        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                            
-                            [self.navigationController popViewControllerAnimated:YES];
-                            
-                        }]];
-                        [self presentViewController:alert animated:YES completion:nil];
-                    }
-                    //扫描失败(可能原因：)
-                    else
-                    {
-                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"扫描结果" message:result[@"message"] preferredStyle:UIAlertControllerStyleAlert];
-                        [alert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                            
-                            if (_session != nil && timer != nil) {
-                                [_session startRunning];
-                                [timer setFireDate:[NSDate date]];
-                            }
-                            
-                        }]];
-                        [self presentViewController:alert animated:YES completion:nil];
-                    }
-                    
-                } error:^(id error) {
-                    
-                } withHUD:YES];
-                
-            }
-            
-            
-            
-            
-        }
-        
-        
-        
-    }
     
     
     
@@ -503,6 +348,13 @@
     
     
     
+}
+
+-(void)backAction
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 
 -(void)viewWillDisappear:(BOOL)animated

@@ -241,8 +241,11 @@
                 
             }
             else{
+
                 textLabel.textColor = [LTSCalendarAppearance share].dayTextColorOtherMonth;
                 lunarTextLabel.textColor = [LTSCalendarAppearance share].lunarDayTextColorOtherMonth;
+                
+
             }
             
             circleView.layer.borderColor = [UIColor clearColor].CGColor;

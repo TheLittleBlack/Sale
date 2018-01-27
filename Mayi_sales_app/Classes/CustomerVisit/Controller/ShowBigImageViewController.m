@@ -10,28 +10,44 @@
 
 @interface ShowBigImageViewController ()
 
+@property(nonatomic,strong)UIImageView *imageView;
+
 @end
 
 @implementation ShowBigImageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    self.view.backgroundColor = [UIColor blackColor];
+    
+    [self.view addSubview:self.imageView];
+    [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+       
+        make.width.and.mas_equalTo(ScreenWidth);
+        make.left.equalTo(self.view);
+        make.height.mas_equalTo(ScreenHeight/1.5);
+        make.centerY.equalTo(self.view);
+        
+    }];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(UIImageView *)imageView
+{
+    if(!_imageView)
+    {
+        _imageView = [UIImageView new];
+        _imageView.image = self.image;
+    }
+    return _imageView;
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
-*/
+
 
 @end

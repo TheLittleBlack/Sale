@@ -10,4 +10,10 @@
 
 @interface CustomerVisitViewController : UIViewController
 
+@property(nonatomic,strong)NSDictionary *visitData;
+@property(nonatomic,strong)NSString *visitID;
+@property(nonatomic,strong)NSString *storeName;
+@property(nonatomic,strong)NSString *address;
+@property(nonatomic,strong)NSString *AD; // 小地址
+
 @end

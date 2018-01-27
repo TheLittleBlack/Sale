@@ -16,8 +16,10 @@
 
 @interface LoginTextFieldView : UIView
 
+@property(nonatomic,strong)UITextField *textField;
+
 @property(nonatomic,weak)id <LoginTextFieldViewDelegate> delegate;
 
--(instancetype)initWithFrame:(CGRect)frame;
+-(instancetype)initWithFrame:(CGRect)frame andTitleString:(NSString *)titleString andPlaceholderString:(NSString *)placeholderString andRightClearButton:(BOOL)clearButton andShowPasswordButton:(BOOL)showPasswordButton isNumberKeyboard:(BOOL)isNumberKeyboard haveVerificationCode:(BOOL)haveVerificationCode;
 
 @end

@@ -7,12 +7,14 @@
 //
 
 #import "LPDQuoteSystemImagesView.h"
-
+#import "ShowBigImageViewController.h"
+#import "UIImageView+WebCache.h"
 
 @interface LPDQuoteSystemImagesView ()<LPDImagePickerControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate,UINavigationControllerDelegate>
 
 {
     CGFloat _itemWH;
+    NSMutableArray *_models;
 };
 
 //@property (assign, nonatomic) BOOL isSelectOriginalPhoto;            ///是否选了原图
@@ -33,6 +35,7 @@
         self.backgroundColor = [UIColor whiteColor];
         _selectedPhotos = [[NSMutableArray alloc] init];
         _selectedAssets = [[NSMutableArray alloc] init];
+        _xiaoHeiImageArray = [NSMutableArray new];
         
         _maxSelectedCount = 9;
         _countPerRowInView = 5;
@@ -87,8 +90,10 @@
     layout.itemSize = CGSizeMake(_itemWH, _itemWH);
     layout.minimumInteritemSpacing = _margin;
     layout.minimumLineSpacing = _margin;
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal; // 水平滚动
     _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.lpd_width, self.lpd_height) collectionViewLayout:layout];
-    _collectionView.alwaysBounceVertical = YES;
+    _collectionView.alwaysBounceVertical = NO;
+    _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor whiteColor];
     _collectionView.contentInset = _contentInsets;
     _collectionView.dataSource = self;
@@ -101,32 +106,49 @@
 #pragma mark UICollectionView
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if(_selectedPhotos.count < _maxSelectedCount) {
-    return _selectedPhotos.count + 1;
+    if(self.xiaoHeiImageArray.count < _maxSelectedCount) {
+    return self.xiaoHeiImageArray.count + 1;
     }else {
-    return _selectedPhotos.count  ;
+    return self.xiaoHeiImageArray.count  ;
     }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     LPDPhotoArrangeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"LPDPhotoArrangeCell" forIndexPath:indexPath];
     cell.videoThumbnail.hidden = YES;
-    if(_selectedPhotos.count<_maxSelectedCount) {
-      if (indexPath.row == _selectedPhotos.count) {
-        [cell.imageThumbnail setImage:[UIImage imageNamedFromMyBundle:@"AlbumAddBtn.png"]];
-        cell.imageThumbnail.layer.borderWidth = 2;
+    if(self.xiaoHeiImageArray.count<_maxSelectedCount) {
+      if (indexPath.row == self.xiaoHeiImageArray.count) {
+          
+        [cell.imageThumbnail setImage:[UIImage imageNamed:@"camera_press"]];
+        cell.imageThumbnail.layer.borderWidth = 1;
         cell.nookDeleteBtn.hidden = YES;
        
       } else {
-        cell.imageThumbnail.image = _selectedPhotos[indexPath.row];
-        cell.asset = _selectedAssets[indexPath.row];
+          
+          if( [self.xiaoHeiImageArray[indexPath.row] isKindOfClass:[UIImage class]] )
+          {
+              cell.imageThumbnail.image = self.xiaoHeiImageArray[indexPath.row];
+          }
+          else if ([self.xiaoHeiImageArray[indexPath.row] isKindOfClass:[NSString class]])
+          {
+              [cell.imageThumbnail sd_setImageWithURL:[NSURL URLWithString:self.xiaoHeiImageArray[indexPath.row]]];
+          }
+        
         cell.imageThumbnail.layer.borderWidth = 0;
         cell.nookDeleteBtn.hidden = NO;
         
         }
     }else {
-        cell.imageThumbnail.image = _selectedPhotos[indexPath.row];
-        cell.asset = _selectedAssets[indexPath.row];
+        
+        if( [self.xiaoHeiImageArray[indexPath.row] isKindOfClass:[UIImage class]] )
+        {
+            cell.imageThumbnail.image = self.xiaoHeiImageArray[indexPath.row];
+        }
+        else if ([self.xiaoHeiImageArray[indexPath.row] isKindOfClass:[NSString class]])
+        {
+            [cell.imageThumbnail sd_setImageWithURL:[NSURL URLWithString:self.xiaoHeiImageArray[indexPath.row]]];
+        }
+        
         cell.imageThumbnail.layer.borderWidth = 0;
         cell.nookDeleteBtn.hidden = NO;
     }
@@ -137,38 +159,32 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == _selectedPhotos.count) {
+    
+    self.sessionNumber = indexPath.row;
+    
+    if (indexPath.row == self.xiaoHeiImageArray.count) {
        
        [self pushImagePickerController];
         
-    } else { //预览照片或者视频
-        id asset = _selectedAssets[indexPath.row];
-        BOOL isVideo = NO;
-        if ([asset isKindOfClass:[PHAsset class]]) {
-            PHAsset *phAsset = asset;
-            isVideo = phAsset.mediaType == PHAssetMediaTypeVideo;
-        } else if ([asset isKindOfClass:[ALAsset class]]) {
-            ALAsset *alAsset = asset;
-            isVideo = [[alAsset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo];
-        }
-        if (isVideo) { // 预览视频
-            LPDVideoPlayerController *vc = [[LPDVideoPlayerController alloc] init];
-            LPDAssetModel *model = [LPDAssetModel modelWithAsset:asset type:LPDAssetModelMediaTypeVideo timeLength:@""];
-            vc.model = model;
-            [self.navcDelegate presentViewController:vc animated:YES completion:nil];
-        } else { // 预览照片
-            LPDImagePickerController *selectImagePickerVc = [[LPDImagePickerController alloc] initWithSelectedAssets:_selectedAssets selectedPhotos:_selectedPhotos index:indexPath.row];
-            selectImagePickerVc.maxImagesCount = _maxSelectedCount;
-            selectImagePickerVc.allowPickingOriginalPhoto = NO;
-
-            [selectImagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-                _selectedPhotos = [NSMutableArray arrayWithArray:photos];
-                _selectedAssets = [NSMutableArray arrayWithArray:assets];
-               [_collectionView reloadData];
-                _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
-            }];
-            [self.navcDelegate presentViewController:selectImagePickerVc animated:YES completion:nil];
-        }
+    } else { //预览照片
+        
+      
+        
+        ShowBigImageViewController *SBVC = [ShowBigImageViewController new];
+        SBVC.image = self.xiaoHeiImageArray[indexPath.row];
+        [self.navcDelegate presentViewController:SBVC animated:YES completion:nil];
+        
+//        LPDImagePickerController *selectImagePickerVc = [[LPDImagePickerController alloc] initWithSelectedAssets:nil selectedPhotos:self.xiaoHeiImageArray index:indexPath.row];
+//        selectImagePickerVc.maxImagesCount = _maxSelectedCount;
+//        selectImagePickerVc.allowPickingOriginalPhoto = NO;
+//
+//        [selectImagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
+//            self.xiaoHeiImageArray = [NSMutableArray arrayWithArray:photos];
+//            [_collectionView reloadData];
+//            _collectionView.contentSize = CGSizeMake(0, ((_selectedPhotos.count + 2) / 3 ) * (_margin + _itemWH));
+//        }];
+//        [self.navcDelegate presentViewController:selectImagePickerVc animated:YES completion:nil];
+        
     }
 }
 
@@ -176,46 +192,45 @@
 
 /// 长按排序相关代码
 - (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.item < _selectedPhotos.count;
+    return indexPath.item < self.xiaoHeiImageArray.count;
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)sourceIndexPath canMoveToIndexPath:(NSIndexPath *)destinationIndexPath {
-    return (sourceIndexPath.item < _selectedPhotos.count && destinationIndexPath.item < _selectedPhotos.count);
+    return (sourceIndexPath.item < self.xiaoHeiImageArray.count && destinationIndexPath.item < self.xiaoHeiImageArray.count);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)sourceIndexPath didMoveToIndexPath:(NSIndexPath *)destinationIndexPath {
-    UIImage *image = _selectedPhotos[sourceIndexPath.item];
-    [_selectedPhotos removeObjectAtIndex:sourceIndexPath.item];
-    [_selectedPhotos insertObject:image atIndex:destinationIndexPath.item];
+    UIImage *image = self.xiaoHeiImageArray[sourceIndexPath.item];
+    [self.xiaoHeiImageArray removeObjectAtIndex:sourceIndexPath.item];
+    [self.xiaoHeiImageArray insertObject:image atIndex:destinationIndexPath.item];
     
-    id asset = _selectedAssets[sourceIndexPath.item];
-    [_selectedAssets removeObjectAtIndex:sourceIndexPath.item];
-    [_selectedAssets insertObject:asset atIndex:destinationIndexPath.item];
+//    id asset = _selectedAssets[sourceIndexPath.item];
+//    [_selectedAssets removeObjectAtIndex:sourceIndexPath.item];
+//    [_selectedAssets insertObject:asset atIndex:destinationIndexPath.item];
     
     [_collectionView reloadData];
 }
-//
+// 根据本项目需求，移除从相册选择照片功能，改为直接打开相机
 - (void)pushImagePickerController {
-    if (self.maxSelectedCount <= 0) {
-        return;
-    }
    
-    LPDImagePickerController *lpdImagePickerVc = [[LPDImagePickerController alloc] initWithMaxImagesCount:self.maxSelectedCount columnNumber:self.countPerRowInAlbum delegate:self pushPhotoPickerVc:YES];
-        
-    lpdImagePickerVc.allowPickingVideo = NO;
-    lpdImagePickerVc.allowPickingOriginalPhoto = NO;
-    lpdImagePickerVc.sortAscendingByModificationDate = NO;
+    [self takePhoto];
     
-    if (self.maxSelectedCount > 1) {
-        // 设置目前已经选中的图片数组去初始化picker
-        lpdImagePickerVc.selectedAssets = _selectedAssets;
-        lpdImagePickerVc.showSelectBtn = NO;
-        
-    }else {
-        lpdImagePickerVc.showSelectBtn = YES;
-    }
-
-    [self.navcDelegate presentViewController:lpdImagePickerVc animated:YES completion:nil];
+//    LPDImagePickerController *lpdImagePickerVc = [[LPDImagePickerController alloc] initWithMaxImagesCount:self.maxSelectedCount columnNumber:self.countPerRowInAlbum delegate:self pushPhotoPickerVc:YES];
+//
+//    lpdImagePickerVc.allowPickingVideo = NO;
+//    lpdImagePickerVc.allowPickingOriginalPhoto = NO;
+//    lpdImagePickerVc.sortAscendingByModificationDate = NO;
+//
+//    if (self.maxSelectedCount > 1) {
+//        // 设置目前已经选中的图片数组去初始化picker
+//        lpdImagePickerVc.selectedAssets = _selectedAssets;
+//        lpdImagePickerVc.showSelectBtn = NO;
+//
+//    }else {
+//        lpdImagePickerVc.showSelectBtn = YES;
+//    }
+//
+//    [self.navcDelegate presentViewController:lpdImagePickerVc animated:NO completion:nil];
 }
 
 #pragma mark - UIImagePickerController
@@ -235,39 +250,59 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    
     [picker dismissViewControllerAnimated:YES completion:nil];
-    NSString *type = [info objectForKey:UIImagePickerControllerMediaType];
-    if ([type isEqualToString:@"public.image"]) {
-        LPDImagePickerController *lpdImagePickerVc = [[LPDImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
-        lpdImagePickerVc.sortAscendingByModificationDate = YES;
-        [lpdImagePickerVc showProgressHUD];
-        UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-        //  保存图片，获取到asset
-        [[LPDImageManager manager] savePhotoWithImage:image completion:^(NSError *error){
-            if (error) {
-                [lpdImagePickerVc hideProgressHUD];
-                NSLog(@"图片保存失败 %@",error);
-            } else {
-                [[LPDImageManager manager] getCameraRollAlbum:NO allowPickingImage:YES completion:^(LPDAlbumModel *model) {
-                    [[LPDImageManager manager] getAssetsFromFetchResult:model.result allowPickingVideo:NO allowPickingImage:YES completion:^(NSArray<LPDAssetModel *> *models) {
-                        [lpdImagePickerVc hideProgressHUD];
-                        LPDAssetModel *assetModel = [models firstObject];
-                        if (lpdImagePickerVc.sortAscendingByModificationDate) {
-                            assetModel = [models lastObject];
-                        }
-                        
-                        [self refreshCollectionViewWithAddedAsset:assetModel.asset image:image];
-                        
-                    }];
-                }];
-            }
-        }];
+    
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+
+    
+    if(self.navcDelegate && [self.navcDelegate respondsToSelector:@selector(doAfterDidSelectedPhotosWithView:andNumberOf:andClickSessionNumber:withImage:)]){
+        [self.navcDelegate doAfterDidSelectedPhotosWithView:self andNumberOf:self.theNumber andClickSessionNumber:self.sessionNumber withImage:image];
     }
+    
+
 }
 
+//- (void)reloadPhotoArray {
+//
+//    [[LPDImageManager manager] getCameraRollAlbum:lpdImagePickerVc.allowPickingVideo allowPickingImage:lpdImagePickerVc.allowPickingImage completion:^(LPDAlbumModel *model) {
+//        _model = model;
+//        [[LPDImageManager manager] getAssetsFromFetchResult:_model.result allowPickingVideo:lpdImagePickerVc.allowPickingVideo allowPickingImage:lpdImagePickerVc.allowPickingImage completion:^(NSArray<LPDAssetModel *> *models) {
+//            [lpdImagePickerVc hideProgressHUD];
+//
+//            LPDAssetModel *assetModel;
+//            if (lpdImagePickerVc.sortAscendingByModificationDate) {
+//                assetModel = [models lastObject];
+//                [_models addObject:assetModel];
+//            } else {
+//                assetModel = [models firstObject];
+//                [_models insertObject:assetModel atIndex:0];
+//            }
+//
+//            if (lpdImagePickerVc.maxImagesCount <= 1) {
+//
+//                [lpdImagePickerVc.selectedModels addObject:assetModel];
+//                [self doneButtonClick];
+//
+//                return;
+//            }
+//
+//            if (lpdImagePickerVc.selectedModels.count < lpdImagePickerVc.maxImagesCount) {
+//                assetModel.isSelected = YES;
+//                [lpdImagePickerVc.selectedModels addObject:assetModel];
+//                [self refreshBottomToolBarStatus];
+//            }
+//            [_collectionView reloadData];
+//
+//            _shouldScrollToBottom = YES;
+//            [self scrollCollectionViewToBottom];
+//        }];
+//    }];
+//}
+
 - (void)refreshCollectionViewWithAddedAsset:(id)asset image:(UIImage *)image {
-    [_selectedAssets addObject:asset];
-    [_selectedPhotos addObject:image];
+//    [_selectedAssets addObject:asset];
+    [self.xiaoHeiImageArray addObject:image];
     [_collectionView reloadData];
    
 }
@@ -289,15 +324,27 @@
 }
 
 
+
+
+
+
+// 用不到
+
+
+
 // lpdImagePicker每次选照片后的保存和更新操作
-- (void)imagePickerController:(LPDImagePickerController *)picker didFinishPickingPhotos:(NSArray *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    _selectedPhotos = [NSMutableArray arrayWithArray:photos];
-    _selectedAssets = [NSMutableArray arrayWithArray:assets];
-  
-    [_collectionView reloadData];
-   
-    //test**********[self printAssetsName:assets];
-}
+//- (void)imagePickerController:(LPDImagePickerController *)picker didFinishPickingPhotos:(NSArray *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
+//    _selectedPhotos = [NSMutableArray arrayWithArray:photos];
+//    _selectedAssets = [NSMutableArray arrayWithArray:assets];
+//
+//    [_collectionView reloadData];
+//
+//    if(self.navcDelegate && [self.navcDelegate respondsToSelector:@selector(doAfterDidSelectedPhotosWithView:andNumberOf:andClickSessionNumber:)]){
+//        [self.navcDelegate doAfterDidSelectedPhotosWithView:self andNumberOf:self.theNumber andClickSessionNumber:self.sessionNumber];
+//    }
+//
+//    //test**********[self printAssetsName:assets];
+//}
 
 // 选择了一个视频的代理方法
 - (void)imagePickerController:(LPDImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAssets:(id)asset {
@@ -312,12 +359,16 @@
    [_collectionView reloadData];
 }
 
+
+
+
+
 #pragma mark - DeleteBtn
 - (void)deleteBtnClik:(UIButton *)sender {
-    [_selectedPhotos removeObjectAtIndex:sender.tag];
-    [_selectedAssets removeObjectAtIndex:sender.tag];
+    [self.xiaoHeiImageArray removeObjectAtIndex:sender.tag];
+//    [_selectedAssets removeObjectAtIndex:sender.tag];
     
-    if(_selectedPhotos.count == _maxSelectedCount - 1){
+    if(self.xiaoHeiImageArray.count == _maxSelectedCount - 1){
         [_collectionView reloadData];
     }else{
     [_collectionView performBatchUpdates:^{
@@ -327,6 +378,13 @@
         [_collectionView reloadData];
     }];
     }
+    
+    
+    if(self.navcDelegate && [self.navcDelegate respondsToSelector:@selector(delectButtonActionOfNumber:andSessionNumber:)]){
+        [self.navcDelegate delectButtonActionOfNumber:self.theNumber andSessionNumber:sender.tag];
+    }
+    
+    
 }
 
 /// 打印图片名字test

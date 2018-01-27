@@ -25,6 +25,8 @@
 - (instancetype)initWithSelectedAssets:(NSMutableArray *)selectedAssets selectedPhotos:(NSMutableArray *)selectedPhotos index:(NSInteger)index;
 ///用这个初始化方法以裁剪图片
 
+// 我加的
+@property (nonatomic, strong)NSMutableArray *daHeiImageArray;
 
 /// Default is 9 / 默认最大可选9张图片
 @property (nonatomic, assign) NSInteger maxImagesCount;

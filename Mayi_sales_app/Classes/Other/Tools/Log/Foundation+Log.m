@@ -10,7 +10,7 @@
 
 @implementation NSDictionary (Log)
 
--(NSString *)descriptionWithLocale:(id)locale
+- (NSString *)descriptionWithLocale:(nullable id)locale indent:(NSUInteger)level
 {
     //控制字典的输出内容
     
@@ -34,7 +34,7 @@
 
 @implementation NSArray (Log)
 
--(NSString *)descriptionWithLocale:(id)locale
+- (NSString *)descriptionWithLocale:(nullable id)locale indent:(NSUInteger)level
 {
     //控制字典的输出内容
     

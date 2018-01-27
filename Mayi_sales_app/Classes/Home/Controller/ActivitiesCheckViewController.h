@@ -6,6 +6,8 @@
 //  Copyright © 2017年 JayJay. All rights reserved.
 //
 
+// 活动检查
+
 #import "BaseWebViewController.h"
 
 @interface ActivitiesCheckViewController : BaseWebViewController

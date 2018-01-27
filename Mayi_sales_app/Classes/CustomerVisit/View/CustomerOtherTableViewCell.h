@@ -10,4 +10,10 @@
 
 @interface CustomerOtherTableViewCell : UITableViewCell
 
+@property(nonatomic,strong)UILabel *finishLabel; // 完成标记
+@property(nonatomic,strong)UIImageView *gotoImageView;
+@property(nonatomic,strong)UILabel *titleLabel;
+@property(nonatomic,strong)UIView *underLineView;
+@property(nonatomic,strong)UIImageView *finishImageView; // 完成情况icon
+
 @end

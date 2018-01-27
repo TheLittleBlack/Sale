@@ -10,4 +10,6 @@
 
 @interface NSDictionary (GetSign)
 
+-(NSString *)getSignString;
+
 @end

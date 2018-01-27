@@ -10,4 +10,7 @@
 
 @interface TeamManageVisitViewController : BaseWebViewController
 
+@property(nonatomic,strong)NSString *visitID;
+@property(nonatomic,assign)NSInteger businessKey;
+
 @end

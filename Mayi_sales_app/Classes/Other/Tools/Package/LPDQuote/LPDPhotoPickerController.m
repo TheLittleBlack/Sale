@@ -63,33 +63,40 @@ static CGSize AssetGridThumbnailSize;
     return _imagePickerVc;
 }
 
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    LPDImagePickerController *lpdImagePickerVc = (LPDImagePickerController *)self.navigationController;
-    _isSelectOriginalPhoto = lpdImagePickerVc.isSelectOriginalPhoto;
-    _shouldScrollToBottom = YES;
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationItem.title = _model.name;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:lpdImagePickerVc.cancelBtnTitleStr style:UIBarButtonItemStylePlain target:lpdImagePickerVc action:@selector(cancelButtonClick)];
-    _showTakePhotoBtn = (([[LPDImageManager manager] isCameraRollAlbum:_model.name]) && lpdImagePickerVc.allowTakePicture);
-    if (!lpdImagePickerVc.sortAscendingByModificationDate && _isFirstAppear && iOS8Later) {
-        [[LPDImageManager manager] getCameraRollAlbum:lpdImagePickerVc.allowPickingVideo allowPickingImage:lpdImagePickerVc.allowPickingImage completion:^(LPDAlbumModel *model) {
-            _model = model;
-            _models = [NSMutableArray arrayWithArray:_model.models];
-            [self initSubviews];
-        }];
-    } else {
-        if (_showTakePhotoBtn || !iOS8Later || _isFirstAppear) {
-            [[LPDImageManager manager] getAssetsFromFetchResult:_model.result allowPickingVideo:lpdImagePickerVc.allowPickingVideo allowPickingImage:lpdImagePickerVc.allowPickingImage completion:^(NSArray<LPDAssetModel *> *models) {
-                _models = [NSMutableArray arrayWithArray:models];
-                [self initSubviews];
-            }];
-        } else {
-            _models = [NSMutableArray arrayWithArray:_model.models];
-            [self initSubviews];
-        }
-    }
+    
+    self.view.backgroundColor = [UIColor clearColor];
+//    LPDImagePickerController *lpdImagePickerVc = (LPDImagePickerController *)self.navigationController;
+//    _isSelectOriginalPhoto = lpdImagePickerVc.isSelectOriginalPhoto;
+//    _shouldScrollToBottom = YES;
+//    self.view.backgroundColor = [UIColor whiteColor];
+//    self.navigationItem.title = _model.name;
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:lpdImagePickerVc.cancelBtnTitleStr style:UIBarButtonItemStylePlain target:lpdImagePickerVc action:@selector(cancelButtonClick)];
+//    _showTakePhotoBtn = (([[LPDImageManager manager] isCameraRollAlbum:_model.name]) && lpdImagePickerVc.allowTakePicture);
+//    if (!lpdImagePickerVc.sortAscendingByModificationDate && _isFirstAppear && iOS8Later) {
+//        [[LPDImageManager manager] getCameraRollAlbum:lpdImagePickerVc.allowPickingVideo allowPickingImage:lpdImagePickerVc.allowPickingImage completion:^(LPDAlbumModel *model) {
+//            _model = model;
+//            _models = [NSMutableArray arrayWithArray:_model.models];
+//            [self initSubviews];
+//        }];
+//    } else {
+//        if (_showTakePhotoBtn || !iOS8Later || _isFirstAppear) {
+//            [[LPDImageManager manager] getAssetsFromFetchResult:_model.result allowPickingVideo:lpdImagePickerVc.allowPickingVideo allowPickingImage:lpdImagePickerVc.allowPickingImage completion:^(NSArray<LPDAssetModel *> *models) {
+//                _models = [NSMutableArray arrayWithArray:models];
+//                [self initSubviews];
+//            }];
+//        } else {
+//            _models = [NSMutableArray arrayWithArray:_model.models];
+//            [self initSubviews];
+//        }
+//    }
     // [self resetCachedAssets];
+    
+    // myAdd
+    [self takePhoto];
 }
 
 - (void)initSubviews {
@@ -142,14 +149,17 @@ static CGSize AssetGridThumbnailSize;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self scrollCollectionViewToBottom];
+
     // Determine the size of the thumbnails to request from the PHCachingImageManager
-    CGFloat scale = 2.0;
-    if ([UIScreen mainScreen].bounds.size.width > 600) {
-        scale = 1.0;
-    }
-    CGSize cellSize = ((UICollectionViewFlowLayout *)_collectionView.collectionViewLayout).itemSize;
-    AssetGridThumbnailSize = CGSizeMake(cellSize.width * scale, cellSize.height * scale);
+//    [self scrollCollectionViewToBottom];
+//    CGFloat scale = 2.0;
+//    if ([UIScreen mainScreen].bounds.size.width > 600) {
+//        scale = 1.0;
+//    }
+//    CGSize cellSize = ((UICollectionViewFlowLayout *)_collectionView.collectionViewLayout).itemSize;
+//    AssetGridThumbnailSize = CGSizeMake(cellSize.width * scale, cellSize.height * scale);
+    
+    self.navigationController.navigationBar.hidden = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -276,32 +286,36 @@ static CGSize AssetGridThumbnailSize;
     
     __block BOOL havenotShowAlert = YES;
     [LPDImageManager manager].shouldFixOrientation = YES;
-    for (NSInteger i = 0; i < lpdImagePickerVc.selectedModels.count; i++) {
-        LPDAssetModel *model = lpdImagePickerVc.selectedModels[i];
-        [[LPDImageManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
-            if (isDegraded) return;
-            if (photo) {
-                photo = [self scaleImage:photo toSize:CGSizeMake(lpdImagePickerVc.photoWidth, (int)(lpdImagePickerVc.photoWidth * photo.size.height / photo.size.width))];
-                [photos replaceObjectAtIndex:i withObject:photo];
-            }
-            if (info)  [infoArr replaceObjectAtIndex:i withObject:info];
-            [assets replaceObjectAtIndex:i withObject:model.asset];
-            
-            for (id item in photos) { if ([item isKindOfClass:[NSNumber class]]) return; }
-            
-            if (havenotShowAlert) {
-                [self didGetAllPhotos:photos assets:assets infoArr:infoArr];
-            }
-        } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-            // 如果图片正在从iCloud同步中,提醒用户
-            if (progress < 1 && havenotShowAlert) {
-                [lpdImagePickerVc hideProgressHUD];
-                [lpdImagePickerVc showAlertWithTitle:[NSBundle lpd_localizedStringForKey:@"Synchronizing photos from iCloud"]];
-                havenotShowAlert = NO;
-                return;
-            }
-        } networkAccessAllowed:YES];
+    if(lpdImagePickerVc.selectedModels.count>0)
+    {
+        for (NSInteger i = 0; i < lpdImagePickerVc.selectedModels.count; i++) {
+            LPDAssetModel *model = lpdImagePickerVc.selectedModels[i];
+            [[LPDImageManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+                if (isDegraded) return;
+                if (photo) {
+                    photo = [self scaleImage:photo toSize:CGSizeMake(lpdImagePickerVc.photoWidth, (int)(lpdImagePickerVc.photoWidth * photo.size.height / photo.size.width))];
+                    [photos replaceObjectAtIndex:i withObject:photo];
+                }
+                if (info)  [infoArr replaceObjectAtIndex:i withObject:info];
+                [assets replaceObjectAtIndex:i withObject:model.asset];
+                
+                for (id item in photos) { if ([item isKindOfClass:[NSNumber class]]) return; }
+                
+                if (havenotShowAlert) {
+                    [self didGetAllPhotos:photos assets:assets infoArr:infoArr];
+                }
+            } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+                // 如果图片正在从iCloud同步中,提醒用户
+                if (progress < 1 && havenotShowAlert) {
+                    [lpdImagePickerVc hideProgressHUD];
+                    [lpdImagePickerVc showAlertWithTitle:[NSBundle lpd_localizedStringForKey:@"Synchronizing photos from iCloud"]];
+                    havenotShowAlert = NO;
+                    return;
+                }
+            } networkAccessAllowed:YES];
+        }
     }
+    
     if (lpdImagePickerVc.selectedModels.count <= 0) {
         [self didGetAllPhotos:photos assets:assets infoArr:infoArr];
     }
@@ -312,7 +326,7 @@ static CGSize AssetGridThumbnailSize;
     [lpdImagePickerVc hideProgressHUD];
     
     if (lpdImagePickerVc.autoDismiss) {
-        [self.navigationController dismissViewControllerAnimated:YES completion:^{
+        [self.navigationController dismissViewControllerAnimated:NO completion:^{
             [self callDelegateMethodWithPhotos:photos assets:assets infoArr:infoArr];
         }];
     } else {
@@ -461,7 +475,7 @@ static CGSize AssetGridThumbnailSize;
             if(iOS8Later) {
                 _imagePickerVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             }
-            [self presentViewController:_imagePickerVc animated:YES completion:nil];
+            [self presentViewController:_imagePickerVc animated:NO completion:nil];
         } else {
             NSLog(@"模拟器中无法打开照相机,请在真机中使用");
         }
@@ -579,10 +593,17 @@ static CGSize AssetGridThumbnailSize;
         if (image) {
             [[LPDImageManager manager] savePhotoWithImage:image completion:^(NSError *error){
                 if (!error) {
+//                     myAdd
                     [self reloadPhotoArray];
+                    [self doneButtonClick];
                 }
             }];
         }
+        
+//        [self.navigationController dismissViewControllerAnimated:NO completion:^{
+//
+//        }];
+        
     }
 }
 
@@ -615,16 +636,24 @@ static CGSize AssetGridThumbnailSize;
                 [lpdImagePickerVc.selectedModels addObject:assetModel];
                 [self refreshBottomToolBarStatus];
             }
-            [_collectionView reloadData];
+//            [_collectionView reloadData];
             
             _shouldScrollToBottom = YES;
-            [self scrollCollectionViewToBottom];
+//            [self scrollCollectionViewToBottom];
         }];
     }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+   
+    
+    [picker dismissViewControllerAnimated:NO completion:^{
+        [self dismissViewControllerAnimated:NO completion:^{
+            
+        }];
+    }];
+    
 }
 
 - (void)dealloc {

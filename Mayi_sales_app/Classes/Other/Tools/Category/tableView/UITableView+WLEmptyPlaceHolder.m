@@ -15,10 +15,11 @@
 {
     if (rowCount == 0) {
         self.backgroundView = displayView;
-        self.scrollEnabled = NO;
+        self.scrollEnabled = YES;
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
     } else {
         self.backgroundView = nil;
+        self.scrollEnabled = YES;
         self.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     }
 }

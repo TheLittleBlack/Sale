@@ -108,7 +108,7 @@
     if (self) {
         self.maxImagesCount = maxImagesCount > 0 ? maxImagesCount : 9; // Default is 9 / 默认最大可选9张图片
         self.pickerDelegate = delegate;
-        self.selectedModels = [NSMutableArray array];
+        self.daHeiImageArray = [NSMutableArray array];
         
         // 默认准许用户选择原图和视频, 你也可以在这个方法后置为NO
         self.allowPickingOriginalPhoto = YES;
@@ -150,10 +150,12 @@
 
 /// This init method just for previewing photos / 用这个初始化方法以预览图片
 - (instancetype)initWithSelectedAssets:(NSMutableArray *)selectedAssets selectedPhotos:(NSMutableArray *)selectedPhotos index:(NSInteger)index{
+    
     LPDPhotoPreviewController *previewVc = [[LPDPhotoPreviewController alloc] init];
     self = [super initWithRootViewController:previewVc];
     if (self) {
-        self.selectedAssets = [NSMutableArray arrayWithArray:selectedAssets];
+        self.daHeiImageArray = [NSMutableArray arrayWithArray:selectedPhotos];
+//        self.selectedAssets = [NSMutableArray arrayWithArray:selectedAssets];
         self.allowPickingOriginalPhoto = self.allowPickingOriginalPhoto;
         [self configDefaultSetting];
         
@@ -345,15 +347,7 @@
     [LPDImageManager manager].photoPreviewMaxWidth = _photoPreviewMaxWidth;
 }
 
-- (void)setSelectedAssets:(NSMutableArray *)selectedAssets {
-    _selectedAssets = selectedAssets;
-    _selectedModels = [NSMutableArray array];
-    for (id asset in selectedAssets) {
-        LPDAssetModel *model = [LPDAssetModel modelWithAsset:asset type:LPDAssetModelMediaTypePhoto];
-        model.isSelected = YES;
-        [_selectedModels addObject:model];
-    }
-}
+
 
 - (void)setAllowPickingImage:(BOOL)allowPickingImage {
     _allowPickingImage = allowPickingImage;
