@@ -102,6 +102,10 @@
 		DDEB13831FEC271E00E08E84 /* UIView+HandyValue.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEB13711FEC271D00E08E84 /* UIView+HandyValue.m */; };
 		DDF1DA8E200AFD9E0041F1C6 /* UpdateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF1DA8D200AFD9E0041F1C6 /* UpdateViewController.m */; };
 		DDF1DAE3200E3DB50041F1C6 /* cccc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DDF1DAE2200E3DB50041F1C6 /* cccc@2x.png */; };
+		DDF3078F20601F4F00D91BC5 /* FindReceiveOrdersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF3078E20601F4F00D91BC5 /* FindReceiveOrdersViewController.m */; };
+		DDF7E23620615B41009BA7EE /* SaoMaShouHuoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E23520615B41009BA7EE /* SaoMaShouHuoViewController.m */; };
+		DDF7E2392061888E009BA7EE /* SaoMaShouHuoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E2382061888E009BA7EE /* SaoMaShouHuoTableViewCell.m */; };
+		DDF7E23C2061F92C009BA7EE /* SaoMaShouHuoFootView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E23B2061F92C009BA7EE /* SaoMaShouHuoFootView.m */; };
 		DDF88B321FF3E2FD009A8C00 /* SignAddressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF88B311FF3E2FD009A8C00 /* SignAddressTableViewCell.m */; };
 		E98DA0583BA57AD3B3D765F3 /* libPods-Mayi_sales_app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D0FB7152AA608D39F79F380 /* libPods-Mayi_sales_app.a */; };
 /* End PBXBuildFile section */
@@ -316,6 +320,14 @@
 		DDF1DA8D200AFD9E0041F1C6 /* UpdateViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpdateViewController.m; sourceTree = "<group>"; };
 		DDF1DA90200BB41C0041F1C6 /* Mayi_sales_app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Mayi_sales_app.entitlements; sourceTree = "<group>"; };
 		DDF1DAE2200E3DB50041F1C6 /* cccc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cccc@2x.png"; sourceTree = "<group>"; };
+		DDF3078D20601F4F00D91BC5 /* FindReceiveOrdersViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FindReceiveOrdersViewController.h; sourceTree = "<group>"; };
+		DDF3078E20601F4F00D91BC5 /* FindReceiveOrdersViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FindReceiveOrdersViewController.m; sourceTree = "<group>"; };
+		DDF7E23420615B41009BA7EE /* SaoMaShouHuoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SaoMaShouHuoViewController.h; sourceTree = "<group>"; };
+		DDF7E23520615B41009BA7EE /* SaoMaShouHuoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SaoMaShouHuoViewController.m; sourceTree = "<group>"; };
+		DDF7E2372061888E009BA7EE /* SaoMaShouHuoTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SaoMaShouHuoTableViewCell.h; sourceTree = "<group>"; };
+		DDF7E2382061888E009BA7EE /* SaoMaShouHuoTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SaoMaShouHuoTableViewCell.m; sourceTree = "<group>"; };
+		DDF7E23A2061F92C009BA7EE /* SaoMaShouHuoFootView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SaoMaShouHuoFootView.h; sourceTree = "<group>"; };
+		DDF7E23B2061F92C009BA7EE /* SaoMaShouHuoFootView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SaoMaShouHuoFootView.m; sourceTree = "<group>"; };
 		DDF88B301FF3E2FD009A8C00 /* SignAddressTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignAddressTableViewCell.h; sourceTree = "<group>"; };
 		DDF88B311FF3E2FD009A8C00 /* SignAddressTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignAddressTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -620,6 +632,10 @@
 				DDCAFBF41FEF9715001CDF09 /* ResultsQueryViewController.m */,
 				DDCAFBF61FEF9955001CDF09 /* ActivitiesCheckViewController.h */,
 				DDCAFBF71FEF9955001CDF09 /* ActivitiesCheckViewController.m */,
+				DDF3078D20601F4F00D91BC5 /* FindReceiveOrdersViewController.h */,
+				DDF3078E20601F4F00D91BC5 /* FindReceiveOrdersViewController.m */,
+				DDF7E23420615B41009BA7EE /* SaoMaShouHuoViewController.h */,
+				DDF7E23520615B41009BA7EE /* SaoMaShouHuoViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -638,6 +654,10 @@
 				DDC10A8D1FD84FC40096BBC5 /* SDMajletView.m */,
 				DDC10A8F1FD84FCB0096BBC5 /* SDMajletCell.h */,
 				DDC10A901FD84FCB0096BBC5 /* SDMajletCell.m */,
+				DDF7E2372061888E009BA7EE /* SaoMaShouHuoTableViewCell.h */,
+				DDF7E2382061888E009BA7EE /* SaoMaShouHuoTableViewCell.m */,
+				DDF7E23A2061F92C009BA7EE /* SaoMaShouHuoFootView.h */,
+				DDF7E23B2061F92C009BA7EE /* SaoMaShouHuoFootView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1370,8 +1390,10 @@
 				DD5FEB1E1FDC13DF00112CF9 /* ForgetPasswordViewController.m in Sources */,
 				DD23D4A71FFD35C700C42592 /* TeamManageVisitViewController.m in Sources */,
 				DD3902452013990D00C5D016 /* LTSCalendarManager.m in Sources */,
+				DDF7E23C2061F92C009BA7EE /* SaoMaShouHuoFootView.m in Sources */,
 				DDEB13381FEBEB0600E08E84 /* CustomerVisitViewController.m in Sources */,
 				DD484E621FD3CD4A00180A51 /* MessageViewController.m in Sources */,
+				DDF3078F20601F4F00D91BC5 /* FindReceiveOrdersViewController.m in Sources */,
 				DDADB5052003C78E0056205F /* OrderViewController.m in Sources */,
 				DDEB137D1FEC271E00E08E84 /* LPDProgressView.m in Sources */,
 				DDEB13831FEC271E00E08E84 /* UIView+HandyValue.m in Sources */,
@@ -1390,6 +1412,7 @@
 				DDEB13741FEC271E00E08E84 /* LPDAssetModel.m in Sources */,
 				DDCAFBDC1FEF66A5001CDF09 /* ResetPasswordViewController.m in Sources */,
 				DD484E641FD3CD4A00180A51 /* UIView+MyFrame.m in Sources */,
+				DDF7E2392061888E009BA7EE /* SaoMaShouHuoTableViewCell.m in Sources */,
 				DDAC783C1FFA35300058D4C1 /* UITableView+WLEmptyPlaceHolder.m in Sources */,
 				DD1EAF9D1FE960E000C81D84 /* ScheduleTableViewHeaderView.m in Sources */,
 				DDEB13771FEC271E00E08E84 /* LPDImagePickerController.m in Sources */,
@@ -1420,6 +1443,7 @@
 				DDEB13751FEC271E00E08E84 /* LPDImageManager.m in Sources */,
 				DD3902422013990D00C5D016 /* LTSCalendarCollectionViewFlowLayout.m in Sources */,
 				DD750C111FDD7B3100719429 /* MessageBaseTableViewCell.m in Sources */,
+				DDF7E23620615B41009BA7EE /* SaoMaShouHuoViewController.m in Sources */,
 				DD1EAF9A1FE9539D00C81D84 /* ScheduleTableViewCell.m in Sources */,
 				DDF1DA8E200AFD9E0041F1C6 /* UpdateViewController.m in Sources */,
 				DDEB13801FEC271E00E08E84 /* LPDVideoPlayerController.m in Sources */,

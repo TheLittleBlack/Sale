@@ -11,7 +11,6 @@
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
 #import "LPDQuoteSystemImagesView.h"
-// #import <MapKit/MapKit.h>
 #define TextFieldHeight ScreenHeight/3
 
 @interface AddNewWorkDailyViewController ()<UITextViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,MAMapViewDelegate,AMapSearchDelegate,LPDQuoteSystemImagesViewDelegate>

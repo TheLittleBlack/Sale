@@ -108,11 +108,22 @@
             baseURL = @"app/customer/insert_photo_info.htm";  // 客户管理拍照储存
         }
             break;
-            
-       
+        case ScanReceive:
+        {
+            baseURL = @"order/receive_scan.htm";  // 扫码收货
+        }
+            break;
+        case FindReceiveOrders:
+        {
+            baseURL = @"order/find_receive_orders.htm";  // 收货订单列表
+        }
+            break;
+        case ReceiveConfirmation:
+        {
+            baseURL = @"order/receive_confirmation.htm";  // 确认收货
+        }
+            break;
 
-     
-      
     }
     
     NSString *urlProtocol = @"http://";

@@ -15,5 +15,6 @@
 @property(nonatomic,assign)BOOL autoManageBack ; // 是否自动监听返回事件 默认为Yes
 
 -(void)urlActionType:(NSString *)actionString; // 通过该方法将点击类型丢给子类实现
+-(void)requestUrl:(NSString *)url;  // 调用到的url全路径
 
 @end

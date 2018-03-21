@@ -30,6 +30,9 @@ typedef NS_ENUM(NSUInteger,MayiURLType) {
     SubmitDeviceToken, // 提交设备
     CheckUpdate, // 更新检测
     SaveCustomerPhoto, // 客户管理拍照储存
+    ScanReceive, // 扫码收货
+    FindReceiveOrders, // 收货订单列表
+    ReceiveConfirmation, // 确认收货
 };
 
 
@@ -49,7 +52,7 @@ typedef NS_ENUM(NSUInteger,MayiWebUrlType) {
     ActivitiesCheck, // 活动检查
     VisitDetails, // 查看拜访详情
     Message, // 未知消息
-    GetMessage, // 获取消息详情的正真路径。我也不知道为什么这么奇怪。
+    GetMessage, // 获取消息详情的正真路径。我也不知道为什么这么奇怪
     OrderDown, // 订单执行
     CheckApproval, // 查看待办事务
     

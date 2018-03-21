@@ -124,6 +124,7 @@
 {
     NSURL *URL = request.URL;
     MyLog(@"请求的URL：%@",URL);
+    [self requestUrl:[NSString stringWithFormat:@"%@",URL]];
     
     NSArray *urlArray = [[NSString stringWithFormat:@"%@",URL] componentsSeparatedByString:@"."];
     NSString *actionType = urlArray.lastObject;
@@ -135,6 +136,12 @@
     
     // 自动返回
     if ([lastStr isEqualToString:@"Back"]&&self.autoManageBack) {
+        
+        if([urlStr containsString:@"approvalList.goBack"]) // 特殊情况，这个需要直接pop回去而不是goback
+        {
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }
+        
         if(self.webView.canGoBack) // 如果能返回上一级
         {
             [self.webView goBack];
@@ -180,6 +187,10 @@
 }
 
 
+-(void)requestUrl:(NSString *)url
+{
+    
+}
 
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error

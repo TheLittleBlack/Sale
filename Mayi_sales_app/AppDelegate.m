@@ -18,6 +18,7 @@
 #import <BuglyHotfix/BuglyMender.h>
 #import "JPEngine.h"
 #import "MessageDetailsWebViewController.h"
+#import <CoreLocation/CLLocationManager.h>
 
 #define AMapKey @"c8cb4209d6976cf60837928cf83cab98" // 高德地图 Key
 #define UmessageKey @"5a5b752ab27b0a1f0b0003fa"  // 友盟 Key
@@ -27,6 +28,7 @@
 @interface AppDelegate ()<UNUserNotificationCenterDelegate,UIWebViewDelegate,BuglyDelegate>
 
 @property(nonatomic,strong)UITabBarController *tabBarController;
+@property(nonatomic,strong)CLLocationManager *locationManager;
 
 @end
 
@@ -43,7 +45,9 @@
     
     // 配置Bugly
     [self configBugly];
-
+    
+    // 检测定位权限
+    [self cheackLocation];
 
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithWhite:30/255.0 alpha:1]];
 
@@ -127,10 +131,6 @@
 
 - (void)configureUMessageWithLaunchOptions:(NSDictionary *)launchOptions {
     
-
-
-    
-    
     //设置AppKey & LaunchOptions
     [UMessage startWithAppkey:UmessageKey launchOptions:launchOptions];
     
@@ -187,7 +187,7 @@
     if([UIApplication sharedApplication].applicationState == UIApplicationStateActive){
         //关闭对话框
         [UMessage setAutoAlert:NO];
-        [self goToMessageDetails:url];
+//        [self goToMessageDetails:url];
         
     }
     [UMessage didReceiveRemoteNotification:userInfo];
@@ -202,7 +202,7 @@
     if([UIApplication sharedApplication].applicationState == UIApplicationStateActive){
         //关闭对话框
         [UMessage setAutoAlert:NO];
-        [self goToMessageDetails:url];
+//        [self goToMessageDetails:url];
         
     }
     [UMessage didReceiveRemoteNotification:userInfo];
@@ -218,7 +218,7 @@
     NSString *url = userInfo[@"pathUrl"];
     MyLog(@"url:%@",url);
     
-    [self goToMessageDetails:url];
+//    [self goToMessageDetails:url];
     
     if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         
@@ -268,7 +268,7 @@
 
     NSString *url = userInfo[@"pathUrl"];
     
-    [self goToMessageDetails:url];
+//    [self goToMessageDetails:url];
 }
 
 
@@ -373,5 +373,17 @@
     }
     return resultVC;
 }
+
+// 用于第一次获取定位权限，以免在后面出现权限不足导致闪退等问题
+-(void)cheackLocation
+{
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) // 用户暂未对定位权限做出选择
+    {
+        self.locationManager = [CLLocationManager new];
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+}
+
+
 
 @end

@@ -18,6 +18,7 @@
 #import "ResultsQueryViewController.h"
 #import "ActivitiesCheckViewController.h"
 #import "UpdateViewController.h"
+#import "FindReceiveOrdersViewController.h"
 #define cellID @"CellID"
 
 @interface HomeViewController ()<SDMajletViewDelegate>
@@ -32,6 +33,7 @@
 @property(nonatomic,strong)NSMutableArray *dataSource;
 @property(nonatomic,strong)UIButton *tipButton;
 @property(nonatomic,strong)NSString *ForcedUpdateText;
+
 
 @end
 
@@ -53,6 +55,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+
     self.navigationItem.title = @"今世缘";
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -147,6 +150,7 @@
                                @{@"iconName":@"icon_dindan",@"title":@"订单管理"},
                                @{@"iconName":@"icon_yeji",@"title":@"业绩查询"},
                                @{@"iconName":@"icon_rizhi",@"title":@"工作日志"},
+                               @{@"iconName":@"work_task_logo",@"title":@"扫码收货"},
                                ];
             _dataSource = [NSMutableArray arrayWithArray:array];
             
@@ -278,6 +282,14 @@
 //        [self.navigationController pushViewController:RQVC animated:YES];
         [Hud showText:@"敬请期待"]; // 没接口
     }
+    else if([selectItemName isEqualToString:@"扫码收货"])
+    {
+        FindReceiveOrdersViewController *FROVC = [FindReceiveOrdersViewController new];
+        [FROVC setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:FROVC animated:YES];
+
+    }
+    
 
     
 
@@ -399,8 +411,7 @@
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"更新提示" message:self.ForcedUpdateText preferredStyle:UIAlertControllerStyleAlert];
     
     [alert addAction:[UIAlertAction actionWithTitle:@"去更新" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        
-
+    
         UpdateViewController * UVC = [UpdateViewController new];
         UVC.urlString = url;
         [UVC setHidesBottomBarWhenPushed:YES];
@@ -415,6 +426,11 @@
     }];
     
 }
+
+
+
+
+
 
 
 

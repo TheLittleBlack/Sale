@@ -16,18 +16,33 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+   
+    
+    
 }
 
 -(void)urlActionType:(NSString *)actionString
 {
-    if([actionString isEqualToString:@" "])
+    
+    if([actionString isEqualToString:@""])
     {
+        
         
         
     }
     
     
 }
+
+
+
+-(void)requestUrl:(NSString *)url
+{
+    if([url containsString:@"mobile.orderManager.goBack"])
+    {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+}
+
 
 @end

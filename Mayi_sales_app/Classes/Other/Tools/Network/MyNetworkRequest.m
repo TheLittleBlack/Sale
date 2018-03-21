@@ -28,6 +28,16 @@
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html", nil];
     
     
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     if(HUD)
