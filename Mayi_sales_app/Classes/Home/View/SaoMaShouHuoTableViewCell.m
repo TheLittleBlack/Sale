@@ -19,11 +19,11 @@
         
         [self addSubview:self.logoImageView];
         [self addSubview:self.titleLabel];
-        [self addSubview:self.boxNumberLabel];
+        
         [self addSubview:self.yiSaoMiaoLabel];
         [self addSubview:self.gongJiXiangLabel];
         [self addSubview:self.shaoJiXiangLabel];
-        
+        [self addSubview:self.boxNumberLabel];
         
     }
     return self;
@@ -105,7 +105,7 @@
         _shaoJiXiangLabel.font = [UIFont systemFontOfSize:15];
         _shaoJiXiangLabel.textAlignment = NSTextAlignmentLeft;
         _shaoJiXiangLabel.textColor = MainColor;
-        _shaoJiXiangLabel.text = @"少4箱";
+        _shaoJiXiangLabel.text = @"少0箱";
     }
     return _shaoJiXiangLabel;
 }
@@ -117,7 +117,7 @@
     [self.logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
        
         make.top.equalTo(self).offset(10);
-        make.left.equalTo(self).offset(10);
+        make.left.equalTo(self).offset(13);
         make.bottom.equalTo(self).offset(-10);
         make.width.mas_equalTo(self.mas_height).multipliedBy(1.2);
         
@@ -125,26 +125,20 @@
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
        
-        make.left.equalTo(self.logoImageView.mas_right);
+        make.left.equalTo(self.logoImageView.mas_right).offset(8);
         make.top.equalTo(self.logoImageView);
         make.right.equalTo(self).offset(-5);
         
     }];
     
-    [self.boxNumberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-       
-        make.left.equalTo(self.titleLabel);
-        make.top.equalTo(self.titleLabel.mas_bottom).offset(5);
-        make.width.mas_equalTo(self.titleLabel);
-        
-    }];
+
     
     CGFloat LabelWidth = [@"已扫00箱" sizeWithAttributes:@{NSFontAttributeName:self.yiSaoMiaoLabel.font}].width + 2;
     
     [self.yiSaoMiaoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.left.equalTo(self.titleLabel);
-        make.top.equalTo(self.boxNumberLabel.mas_bottom).offset(5);
+        make.bottom.equalTo(self.mas_bottom).offset(-8);
         make.width.mas_equalTo(LabelWidth);
         
     }];
@@ -163,6 +157,13 @@
         
     }];
     
+    [self.boxNumberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.left.equalTo(self.titleLabel);
+        make.bottom.equalTo(self.yiSaoMiaoLabel.mas_top).offset(-5);
+        make.width.mas_equalTo(self.titleLabel);
+        
+    }];
     
     
     

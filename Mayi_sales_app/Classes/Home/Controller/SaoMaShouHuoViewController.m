@@ -12,14 +12,21 @@
 #import <AMapSearchKit/AMapSearchKit.h>
 #import "SaoMaShouHuoTableViewCell.h"
 #import "SaoMaShouHuoFootView.h"
+#import "UIImageView+WebCache.h"
+#import "ScanQRCodeViewController.h"
 #define CellID @"cellID"
 #define tableHeaderID @"headerID"
 #define HeaderViewHeight 130
+#define TimerCountDown 60  //定时器倒计时
 
 @interface SaoMaShouHuoViewController ()<UITableViewDelegate,UITableViewDataSource,MAMapViewDelegate,AMapSearchDelegate,SaoMaShouHuoFootViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 {
     BOOL _canlocation;
+    BOOL _showDeleteButton;
+    CGFloat _countDown;
+    CGFloat _longitude;
+    CGFloat _latitude;
 }
 
 @property(nonatomic,strong)UIView *bottomView;
@@ -40,6 +47,8 @@
 @property(nonatomic,strong)UIImage *photo;
 @property(nonatomic,strong)NSString *imageUrl;
 @property(nonatomic,strong)NSTimer *timer;
+@property(nonatomic,strong)NSString *address;
+@property(nonatomic,strong)NSMutableArray *barCodes; // 成功收货才数组
 
 @end
 
@@ -48,9 +57,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-   
-    
     _canlocation = YES;
+    _showDeleteButton = NO;
+    _countDown = TimerCountDown;
     
     NSLog(@"%@",self.data);
     
@@ -178,12 +187,16 @@
     
     
     
-    
+    [self StartTimer];
     
     
     [self.mapView reloadMap];
     
     
+    self.bottomLeftLabel.text = [NSString stringWithFormat:@"合计: %@箱",[self dealAllBox]];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ScanQR:) name:@"ScanQRFinish" object:nil];
     
 }
 
@@ -294,7 +307,15 @@
         _nameLabel.font = [UIFont systemFontOfSize:15];
         _nameLabel.textAlignment = NSTextAlignmentLeft;
         _nameLabel.textColor = [UIColor colorWithWhite:100/255.0 alpha:1];
-        _nameLabel.text = self.data[@"customerName"];
+        if([self.data[@"agencyCustomerType"] integerValue]==4)
+        {
+            _nameLabel.text = [NSString stringWithFormat:@"%@%@",self.data[@"customerName"],@"三方加盟店"];
+        }
+        else
+        {
+            _nameLabel.text = self.data[@"customerName"];
+        }
+        
         _nameLabel.numberOfLines = 0;
         
     }
@@ -380,13 +401,20 @@
 {
     if(!_dataSource)
     {
-        NSArray *array = @[
-                           @"test1",@"test2"
-                           ];
+        NSArray *array = self.data[@"orderItems"];
         
         _dataSource = [NSMutableArray arrayWithArray:array];
     }
     return _dataSource;
+}
+
+-(NSMutableArray *)barCodes
+{
+    if(!_barCodes)
+    {
+        _barCodes = [NSMutableArray new];
+    }
+    return _barCodes;
 }
 
 #pragma mark UITableViewDataSource
@@ -399,10 +427,26 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSDictionary *subData = self.dataSource[indexPath.row];
     SaoMaShouHuoTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellID forIndexPath:indexPath];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
-//    cell.textLabel.text = self.dataSource[indexPath.row];
+    cell.titleLabel.text = [NSString stringWithFormat:@"%@",subData[@"pdtName"]];
+    NSString *imageUrl = subData[@"productGoodsUrl"];
+    if(imageUrl&&![imageUrl isEqual:[NSNull null]])
+    {
+        NSLog(@"%@",imageUrl);
+        
+        [cell.logoImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",imageUrl]]];
+    }
+    cell.boxNumberLabel.text = [NSString stringWithFormat:@"箱码:%@",[subData[@"barCode"] isEqual:[NSNull null]]?@"":subData[@"barCode"]];
+    NSString *qtyReceived = [subData[@"qtyReceived"] isEqual:[NSNull null]]?@"0":subData[@"qtyReceived"];
+    cell.yiSaoMiaoLabel.text = [NSString stringWithFormat:@"已扫%@箱",qtyReceived];
+    NSString *qty = [subData[@"qty"] isEqual:[NSNull null]]?@"0":subData[@"qty"];
+    cell.gongJiXiangLabel.text = [NSString stringWithFormat:@"共%@箱",qty];
+    NSInteger queShao = [qty integerValue] - [qtyReceived integerValue];
+    cell.shaoJiXiangLabel.text = [NSString stringWithFormat:@"少%lu箱",queShao];
+
     return cell;
 }
 
@@ -429,6 +473,19 @@
     {
         [footView.imageButton setImage:self.photo forState:UIControlStateNormal];
     }
+    else
+    {
+        [footView.imageButton setImage:[UIImage imageNamed:@"camera_press"] forState:UIControlStateNormal];
+    }
+    
+    if(_showDeleteButton)
+    {
+        footView.deleteButton.hidden = NO;
+    }
+    else
+    {
+        footView.deleteButton.hidden = YES;
+    }
     return footView;
 }
 
@@ -448,6 +505,8 @@
         AMapReGeocodeSearchRequest *regeo = [[AMapReGeocodeSearchRequest alloc] init];
         
         regeo.location = [AMapGeoPoint locationWithLatitude:userLocation.coordinate.latitude longitude:userLocation.coordinate.longitude];
+        _longitude = userLocation.coordinate.longitude;
+        _latitude = userLocation.coordinate.latitude;
         [self.search AMapReGoecodeSearch:regeo];  // 开始逆地理编码
         
         _canlocation = NO;
@@ -464,7 +523,7 @@
     {
         
         self.addressLabel.text = response.regeocode.formattedAddress;
-        
+        self.address = response.regeocode.formattedAddress;
     }
     else
     {
@@ -478,15 +537,65 @@
     [self openCamera];
 }
 
+// 点击删除照片
+-(void)deleteAction
+{
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        _showDeleteButton = NO;
+        self.photo = NULL;
+        [self.tableView reloadData];
+        
+    });
+}
+
 
 -(void)continueAction
 {
     NSLog(@"继续扫码");
+    ScanQRCodeViewController *SQVC = [ScanQRCodeViewController new];
+    UINavigationController *NVC = [[UINavigationController alloc]initWithRootViewController:SQVC];
+    [self presentViewController:NVC animated:YES completion:^{
+        
+    }];
+   
 }
 
 -(void)confirmAction
 {
     NSLog(@"确认收货");
+    
+    
+    NSDictionary *receiveLocation = @{@"longitude":[NSString stringWithFormat:@"%f",_longitude?_longitude:0.00],@"latitude":[NSString stringWithFormat:@"%f",_latitude?_latitude:0.00],@"address":self.address,@"imgUrl":self.imageUrl?self.imageUrl:@""};
+    // 字典转字符串 并过滤掉空格及换行符
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:receiveLocation options:NSJSONWritingPrettyPrinted error:nil];
+    
+    NSString *DicString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    
+    
+    NSData *jsonDataB = [NSJSONSerialization dataWithJSONObject:self.barCodes options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *DicStringB = [[NSString alloc] initWithData:jsonDataB encoding:NSUTF8StringEncoding];
+    DicStringB = [DicStringB stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    DicStringB = [DicStringB stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    DicStringB = [DicStringB stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    
+    [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:ReceiveConfirmation] withPrameters:@{@"orderSn":self.data[@"orderSn"],@"barCodes":DicStringB,@"receiveLocation":DicString} result:^(id result) {
+        
+        NSInteger ok = [result[@"data"][@"ok"] integerValue];
+        if(ok)
+        {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        
+    } error:^(id error) {
+        
+    } withHUD:YES];
 }
 
 
@@ -555,6 +664,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     self.photo = image;
+                    _showDeleteButton = YES; // 有照片了就把删除按钮显示出来
                     [self.tableView reloadData];
                     
                 });
@@ -581,6 +691,91 @@
     }];
 }
 
+// 计算合计几箱
+-(NSString *)dealAllBox
+{
+    NSInteger number = 0;
+    for (NSDictionary *data in self.dataSource) {
+        
+        NSString *numberStr = data[@"qtyReceived"];
+        if(numberStr&&![numberStr isEqual:[NSNull null]])
+        {
+            number += [numberStr integerValue];
+        }
+        
+    }
+    
+    return [NSString stringWithFormat:@"%lu",number];
+}
+
+
+// 扫码回调
+-(void)ScanQR:(NSNotification *)notification
+{
+    NSString *QRString = notification.userInfo[@"QRString"];
+    NSLog(@"%@",QRString);
+    
+    [self updateDate];
+
+    [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:ScanReceive] withPrameters:@{@"orderSn":self.data[@"orderSn"],@"barCode":QRString} result:^(id result) {
+        
+        [Hud showText:result[@"data"][@"message"]];
+        
+        NSInteger errorType = [result[@"data"][@"data"][@"errorType"] integerValue];
+        if(errorType==0)
+        {
+            NSLog(@"收货成功");
+            [self.barCodes addObject:QRString];
+            
+            [self updateDate];
+            
+        }
+        
+    } error:^(id error) {
+        
+    } withHUD:YES];
+    
+    
+}
+
+
+
+
+-(void)updateDate
+{
+    
+    NSDictionary *prameters = @{@"page":@"1",@"rows":@"50"};
+    
+    // 字典转字符串 并过滤掉空格及换行符
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:prameters options:NSJSONWritingPrettyPrinted error:nil];
+    
+    NSString *DicString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:FindReceiveOrders] withPrameters:@{@"query":DicString} result:^(id result) {
+        
+        [Hud stop];
+        
+        NSArray *targetArray = result[@"data"][@"data"][@"list"];
+        for (NSDictionary *data in targetArray) {
+            if(data[@"orderSn"]==self.data[@"orderSn"])
+            {
+                self.data = data;
+            }
+        }
+ 
+        [self.tableView reloadData];
+        self.bottomLeftLabel.text = [NSString stringWithFormat:@"合计: %@箱",[self dealAllBox]];
+        
+    } error:^(id error) {
+        
+    } withHUD:NO];
+    
+}
+
+
 //点击取消
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
@@ -588,6 +783,50 @@
         
     }];
     
+}
+
+
+-(void)StartTimer
+{
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerAction) userInfo:nil repeats:YES];
+    [self.timer fire];
+
+}
+
+-(void)timerAction
+{
+
+    _countDown--;
+    
+    if(_countDown==0)
+    {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+
+            _countDown = TimerCountDown;
+            [self.mapView reloadMap];
+            [self.tableView reloadData];
+            
+        });
+    }
+}
+
+-(void)stopTimer
+{
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self stopTimer];
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

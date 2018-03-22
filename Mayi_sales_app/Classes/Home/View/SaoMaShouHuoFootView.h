@@ -12,6 +12,7 @@
 @protocol SaoMaShouHuoFootViewDelegate <NSObject>
 
 -(void)takePhote;
+-(void)deleteAction;
 
 @end
 
@@ -19,6 +20,7 @@
 @interface SaoMaShouHuoFootView : UITableViewHeaderFooterView
 
 @property(nonatomic,strong)UIButton *imageButton;
+@property(nonatomic,strong)UIButton *deleteButton; // 删除按钮
 @property(nonatomic,weak)id <SaoMaShouHuoFootViewDelegate> delegate;
 
 @end

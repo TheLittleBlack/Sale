@@ -86,7 +86,7 @@
     upOrdown = NO;
     num =0;
     _line = [[UIImageView alloc] initWithFrame:CGRectMake(LEFT, TOP+10, 220, 2)];
-    _line.image = [UIImage imageNamed:@"line.png"];
+    _line.image = [UIImage imageNamed:@"dan01"];
     [self.view addSubview:_line];
     
     timer = [NSTimer scheduledTimerWithTimeInterval:.02 target:self selector:@selector(animation1) userInfo:nil repeats:YES];
@@ -249,78 +249,13 @@
     NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
     MyLog(@"%@",dictionary);
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ScanQRFinish" object:self userInfo:@{@"QRString":QRString}];
     
-    
-    
-    
+    [self backAction];
 
 }
 
-//选择相片
--(void)choosePicture
-{
 
-    UIImagePickerController *imagrPicker = [[UIImagePickerController alloc]init];
-    imagrPicker.delegate = self;
-    imagrPicker.allowsEditing = YES;
-    //将来源设置为相册
-    imagrPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    
-    [self presentViewController:imagrPicker animated:YES completion:nil];
-    
-    
-    
-}
-
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
-    //获取选中的照片
-    UIImage *image = info[UIImagePickerControllerEditedImage];
-    
-    if (!image) {
-        image = info[UIImagePickerControllerOriginalImage];
-    }
-    //初始化  将类型设置为二维码
-    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:nil];
-    
-    [picker dismissViewControllerAnimated:YES completion:^{
-        //设置数组，放置识别完之后的数据
-        NSArray *features = [detector featuresInImage:[CIImage imageWithData:UIImagePNGRepresentation(image)]];
-        //判断是否有数据（即是否是二维码）
-        if (features.count >= 1)
-        {
-            //取第一个元素就是二维码所存放的文本信息
-            CIQRCodeFeature *feature = features[0];
-            NSString *scannedResult = feature.messageString;
-            //处理二维码信息
-            [self dealQRString:scannedResult];
-        }
-        //不是二维码
-        else
-        {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"根据我多年的扫码经验,这不是一个二维码" preferredStyle:UIAlertControllerStyleAlert];
-            [alert addAction:[UIAlertAction actionWithTitle:@"搞错啦" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                
-                [self.navigationController popViewControllerAnimated:YES];
-                
-            }]];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-
-        
-    }];
-}
-
-//点击取消
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [picker dismissViewControllerAnimated:YES completion:^{
-       
-        timer = [NSTimer scheduledTimerWithTimeInterval:.02 target:self selector:@selector(animation1) userInfo:nil repeats:YES];
-        [timer fire];
-        
-    }];
-
-}
 
 //由于要写两次，所以就封装了一个方法
 -(void)alertControllerMessage:(NSString *)message{

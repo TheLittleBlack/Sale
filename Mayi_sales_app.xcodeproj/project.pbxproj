@@ -106,6 +106,7 @@
 		DDF7E23620615B41009BA7EE /* SaoMaShouHuoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E23520615B41009BA7EE /* SaoMaShouHuoViewController.m */; };
 		DDF7E2392061888E009BA7EE /* SaoMaShouHuoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E2382061888E009BA7EE /* SaoMaShouHuoTableViewCell.m */; };
 		DDF7E23C2061F92C009BA7EE /* SaoMaShouHuoFootView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E23B2061F92C009BA7EE /* SaoMaShouHuoFootView.m */; };
+		DDF7E23F2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E23E2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.m */; };
 		DDF88B321FF3E2FD009A8C00 /* SignAddressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF88B311FF3E2FD009A8C00 /* SignAddressTableViewCell.m */; };
 		E98DA0583BA57AD3B3D765F3 /* libPods-Mayi_sales_app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D0FB7152AA608D39F79F380 /* libPods-Mayi_sales_app.a */; };
 /* End PBXBuildFile section */
@@ -328,6 +329,8 @@
 		DDF7E2382061888E009BA7EE /* SaoMaShouHuoTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SaoMaShouHuoTableViewCell.m; sourceTree = "<group>"; };
 		DDF7E23A2061F92C009BA7EE /* SaoMaShouHuoFootView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SaoMaShouHuoFootView.h; sourceTree = "<group>"; };
 		DDF7E23B2061F92C009BA7EE /* SaoMaShouHuoFootView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SaoMaShouHuoFootView.m; sourceTree = "<group>"; };
+		DDF7E23D2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DingDanLieBiaoTableViewCell.h; sourceTree = "<group>"; };
+		DDF7E23E2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DingDanLieBiaoTableViewCell.m; sourceTree = "<group>"; };
 		DDF88B301FF3E2FD009A8C00 /* SignAddressTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignAddressTableViewCell.h; sourceTree = "<group>"; };
 		DDF88B311FF3E2FD009A8C00 /* SignAddressTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignAddressTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -656,6 +659,8 @@
 				DDC10A901FD84FCB0096BBC5 /* SDMajletCell.m */,
 				DDF7E2372061888E009BA7EE /* SaoMaShouHuoTableViewCell.h */,
 				DDF7E2382061888E009BA7EE /* SaoMaShouHuoTableViewCell.m */,
+				DDF7E23D2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.h */,
+				DDF7E23E2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.m */,
 				DDF7E23A2061F92C009BA7EE /* SaoMaShouHuoFootView.h */,
 				DDF7E23B2061F92C009BA7EE /* SaoMaShouHuoFootView.m */,
 			);
@@ -1455,6 +1460,7 @@
 				DDCAFBE31FEF79F0001CDF09 /* UITabBar+ShowTip.m in Sources */,
 				DDB9212A1FDC3D5300C6A674 /* Hud.m in Sources */,
 				DDB921481FDD395200C6A674 /* NSDictionary+GetPropertyList.m in Sources */,
+				DDF7E23F2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.m in Sources */,
 				DDEB13821FEC271E00E08E84 /* UIImage+MyBundle.m in Sources */,
 				DDB921231FDC301D00C6A674 /* PhoneNumberLoginViewController.m in Sources */,
 				DDB9214F1FDD456400C6A674 /* NSDictionary+GetSign.m in Sources */,

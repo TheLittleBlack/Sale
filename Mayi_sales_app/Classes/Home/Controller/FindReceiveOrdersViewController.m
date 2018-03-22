@@ -8,6 +8,8 @@
 
 #import "FindReceiveOrdersViewController.h"
 #import "SaoMaShouHuoViewController.h"
+#import "DingDanLieBiaoTableViewCell.h"
+#import "NSString+DealTimestamp.h"
 #define CellID @"cellID"
 
 @interface FindReceiveOrdersViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -44,7 +46,7 @@
         _tableView.dataSource = self;
         _tableView.delegate = self;
         _tableView.backgroundColor = [UIColor colorWithWhite:240/255.0 alpha:1];
-        [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:CellID];
+        [_tableView registerClass:[DingDanLieBiaoTableViewCell class] forCellReuseIdentifier:CellID];
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
         _tableView.separatorInset = UIEdgeInsetsZero;
         
@@ -73,17 +75,29 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *data = self.dataSource[indexPath.row];
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellID forIndexPath:indexPath];
+    DingDanLieBiaoTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellID forIndexPath:indexPath];
     cell.textLabel.font = [UIFont systemFontOfSize:15];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.textLabel.text = data[@"orderSn"];
+    cell.nameLabel.text = data[@"customerName"];
+    NSString *time = data[@"createDatetime"];
+    if(time && ![time isEqual:[NSNull null]])
+    {
+        time = [time dealTimestamp];
+    }
+    else
+    {
+        time = @"时间为空";
+    }
+    
+    cell.timeLabel.text = time;
+    cell.orderLabel.text = [NSString stringWithFormat:@"订单编号: %@",data[@"orderSn"]];
+    cell.stateLbael.text = @"审核通过";
     return cell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 50;
+    return 95;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -124,7 +138,7 @@
     NSDictionary *prameters;
     
 
-    prameters = @{@"page":@"1",@"rows":@"50"};
+    prameters = @{@"page":@"1",@"rows":@"100"};
     
     
     // 字典转字符串 并过滤掉空格及换行符
@@ -137,9 +151,8 @@
 
     
     [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:FindReceiveOrders] withPrameters:@{@"query":DicString} result:^(id result) {
-        
+    
         NSArray *targetArray = result[@"data"][@"data"][@"list"];
-        NSLog(@"=============================%@=====================================",targetArray);
         self.dataSource = [NSMutableArray arrayWithArray:targetArray];
         
         [self.tableView reloadData];
