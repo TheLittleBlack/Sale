@@ -15,7 +15,7 @@
 #import "UITableView+WLEmptyPlaceHolder.h"
 #import "TeamManageVisitViewController.h"
 #import "LTSCalendarManager.h"
-
+#import "AddTaskViewController.h"
 
 @interface ScheduleViewController ()<SelectIndexPathDelegate,UIPickerViewDelegate,UIPickerViewDataSource,LTSCalendarEventSource>
 
@@ -221,7 +221,7 @@
 {
     if(!_pickerViewDataSource)
     {
-        NSArray *array = @[@"婚喜宴检查",@"品鉴会检查",@"广告检查",@"竞品信息收集",@"自定义"];
+        NSArray *array = @[@"婚喜宴检查",@"品鉴会检查",@"广告检查",@"陈列检查",@"自定义"];
         _pickerViewDataSource = [NSMutableArray arrayWithArray:array];
         
     }
@@ -562,7 +562,8 @@
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     _pickerSelectData = self.pickerViewDataSource[row];
-    MyLog(@"%@",self.pickerViewDataSource[row]);
+    
+    MyLog(@"%@",_pickerSelectData);
 }
 
 -(CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
@@ -584,6 +585,46 @@
 {
     MyLog(@"确定");
     self.backgroundView.hidden = YES;
+    
+    
+    
+    
+    NSString *taskID;
+    
+    if([_pickerSelectData isEqualToString:@"婚喜宴检查"])
+    {
+        taskID = @"7";
+    }
+    else if([_pickerSelectData isEqualToString:@"品鉴会检查"])
+    {
+        taskID = @"5";
+    }
+    else if([_pickerSelectData isEqualToString:@"广告检查"])
+    {
+        taskID = @"3";
+    }
+    else if([_pickerSelectData isEqualToString:@"陈列检查"])
+    {
+        taskID = @"4";
+    }
+    else if([_pickerSelectData isEqualToString:@"自定义"])
+    {
+        
+        AddTaskViewController *ATVCDIY = [AddTaskViewController new];
+        ATVCDIY.urlString = [NSString stringWithFormat:@"%@/%@",[MayiURLManage MayiWebURLManageWithURL:AddDiyTask],_selectDateString];
+        ATVCDIY.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:ATVCDIY animated:YES];
+        return;
+    }
+    
+    AddTaskViewController *ATVC = [AddTaskViewController new];
+    ATVC.urlString = [NSString stringWithFormat:@"%@/%@/%@",[MayiURLManage MayiWebURLManageWithURL:TaskPool],taskID,_selectDateString];
+    ATVC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:ATVC animated:YES];
+    
+    
+    
+    
 }
 
 

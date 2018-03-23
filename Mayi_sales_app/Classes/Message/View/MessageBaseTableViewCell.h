@@ -18,5 +18,6 @@
 @property(nonatomic,strong)UILabel *name;
 @property(nonatomic,strong)UILabel *date;
 @property(nonatomic,strong)UIView *isReadView;
+@property(nonatomic,strong)UILabel *state;
 
 @end

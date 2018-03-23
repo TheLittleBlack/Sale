@@ -16,6 +16,7 @@
 #import "CustomerOtherTableViewCell.h"
 #import "OrderViewController.h"
 #import "NSString+URLEncoded.h"
+#import "PriceInfoViewController.h"
 #define FirstCell @"firstCell"
 #define CellID @"cellID"
 
@@ -166,11 +167,19 @@
 //        NSArray *array = @[
 //                           @"定位",@"照片",@"陈列检查",@"价格信息",@"库存管理",@"市场秩序",@"订单执行",@"拜访情况"
 //                           ];
+        
         NSArray *array = @[
-                           @"  定位",@"* 照片",@"  订单执行",@"* 拜访情况"
+                           @"  定位",@"* 照片",@"  价格信息",@"  订单执行",@"* 拜访情况"
                            ];
         
         _dataSource = [NSMutableArray arrayWithArray:array];
+        
+        // 如果竞品信息的开关打开了
+        if([MYManage defaultManager].isJPSJ)
+        {
+            [_dataSource addObject:@"* 竞品信息"];
+        }
+        
     }
     return _dataSource;
 }
@@ -232,7 +241,7 @@
             cell.finishImageView.image = [UIImage imageNamed:@"over_logo"];
             cell.titleLabel.textColor = [UIColor colorWithWhite:180/255.0 alpha:1];
         }
-        else if(indexPath.section==3&&_visitFinish)
+        else if(indexPath.section==4&&_visitFinish)
         {
 //            cell.finishLabel.hidden = NO;
             cell.finishImageView.image = [UIImage imageNamed:@"over_logo"];
@@ -307,13 +316,22 @@
     }
     if(indexPath.section==2)
     {
+        NSLog(@"价格信息");
+        PriceInfoViewController *PIVC = [PriceInfoViewController new];
+        PIVC.urlString = [NSString stringWithFormat:@"%@%@&%@&%@",[MayiURLManage MayiWebURLManageWithURL:PriceAnomalies],self.visitData[@"gps"][@"cloudId"],self.visitData[@"custId"],self.visitData[@"custNo"]];
+        PIVC.autoManageBack = NO;
+        [self.navigationController pushViewController:PIVC animated:YES];
+        
+    }
+    if(indexPath.section==3)
+    {
         OrderViewController *OVC = [OrderViewController new];
         OVC.urlString = [[NSString stringWithFormat:@"%@/2/%@/%@/%@",[MayiURLManage MayiWebURLManageWithURL:OrderDown],self.visitData[@"custNo"],self.visitData[@"storeName"],self.visitID] URLEncodedString];
         OVC.autoManageBack = NO;
         [OVC setHidesBottomBarWhenPushed:YES] ;
         [self.navigationController pushViewController:OVC animated:YES];
     }
-    if(indexPath.section==3)
+    if(indexPath.section==4)
     {
         MyLog(@"拜访情况");
         VisitCaseViewController *VCC = [VisitCaseViewController new];
@@ -322,6 +340,14 @@
         VCC.saveLogContent = _saveLogContent;
         VCC.saveVisitPhoto = _saveVisitPhoto;
         [self.navigationController pushViewController:VCC animated:YES];
+    }
+    if(indexPath.section==5&&[MYManage defaultManager].isJPSJ)
+    {
+        NSLog(@"竞品信息"); // ↓ 这里与上面的价格信息相似，只是URL不同
+        PriceInfoViewController *PIVC = [PriceInfoViewController new];
+        PIVC.urlString = [NSString stringWithFormat:@"%@%@&%@&%@",[MayiURLManage MayiWebURLManageWithURL:CompetingGoodsCollection],self.visitData[@"gps"][@"cloudId"],self.visitData[@"custId"],self.visitData[@"custNo"]];
+        PIVC.autoManageBack = NO;
+        [self.navigationController pushViewController:PIVC animated:YES];
     }
 }
 

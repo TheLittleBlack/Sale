@@ -33,6 +33,7 @@ typedef NS_ENUM(NSUInteger,MayiURLType) {
     ScanReceive, // 扫码收货
     FindReceiveOrders, // 收货订单列表
     ReceiveConfirmation, // 确认收货
+    CollectTheSwitch, // 竞品收集开关
 };
 
 
@@ -55,6 +56,12 @@ typedef NS_ENUM(NSUInteger,MayiWebUrlType) {
     GetMessage, // 获取消息详情的正真路径。我也不知道为什么这么奇怪
     OrderDown, // 订单执行
     CheckApproval, // 查看待办事务
+    TaskManage, // 检查按钮
+    TaskCheck, // 任务检查
+    AddDiyTask, // 添加自定义任务
+    TaskPool, // 添加任务
+    CompetingGoodsCollection, // 竞品收集
+    PriceAnomalies, // 价格异常
     
 };
 

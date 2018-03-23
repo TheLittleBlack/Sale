@@ -292,8 +292,29 @@
         _numberLabel.font = [UIFont systemFontOfSize:15];
         _numberLabel.textAlignment = NSTextAlignmentLeft;
         _numberLabel.textColor = [UIColor colorWithWhite:100/255.0 alpha:1];
-        _numberLabel.text = self.data[@"orderSn"];
         _numberLabel.numberOfLines = 0;
+        
+        NSString *type = @"";
+        NSInteger channel = [self.data[@"channel"] integerValue];
+        if(channel==8)
+        {
+            type = @"(代客下单)";
+        }
+        else if(channel==9)
+        {
+            type = @"(三方加盟店)";
+        }
+        else if(channel==10)
+        {
+            type = @"(车销)";
+        }
+        else if(channel==11)
+        {
+            type = @"(B2B微商城)";
+        }
+        
+        _numberLabel.text = [NSString stringWithFormat:@"%@%@",self.data[@"orderSn"],type];
+        
         
     }
     return _numberLabel;
@@ -307,14 +328,9 @@
         _nameLabel.font = [UIFont systemFontOfSize:15];
         _nameLabel.textAlignment = NSTextAlignmentLeft;
         _nameLabel.textColor = [UIColor colorWithWhite:100/255.0 alpha:1];
-        if([self.data[@"agencyCustomerType"] integerValue]==4)
-        {
-            _nameLabel.text = [NSString stringWithFormat:@"%@%@",self.data[@"customerName"],@"三方加盟店"];
-        }
-        else
-        {
-            _nameLabel.text = self.data[@"customerName"];
-        }
+
+        
+        _nameLabel.text = [NSString stringWithFormat:@"%@",[self.data[@"customerName"] isEqual:[NSNull null]]?@"":self.data[@"customerName"]];
         
         _nameLabel.numberOfLines = 0;
         
@@ -436,15 +452,17 @@
     if(imageUrl&&![imageUrl isEqual:[NSNull null]])
     {
         NSLog(@"%@",imageUrl);
-        
+        imageUrl = [imageUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]; // 图片可能带有中文名，需要进行编码
         [cell.logoImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",imageUrl]]];
     }
     cell.boxNumberLabel.text = [NSString stringWithFormat:@"箱码:%@",[subData[@"barCode"] isEqual:[NSNull null]]?@"":subData[@"barCode"]];
     NSString *qtyReceived = [subData[@"qtyReceived"] isEqual:[NSNull null]]?@"0":subData[@"qtyReceived"];
-    cell.yiSaoMiaoLabel.text = [NSString stringWithFormat:@"已扫%@箱",qtyReceived];
-    NSString *qty = [subData[@"qty"] isEqual:[NSNull null]]?@"0":subData[@"qty"];
-    cell.gongJiXiangLabel.text = [NSString stringWithFormat:@"共%@箱",qty];
-    NSInteger queShao = [qty integerValue] - [qtyReceived integerValue];
+    NSString *convertNumber = [subData[@"convertNumber"] isEqual:[NSNull null]]?@"0":subData[@"convertNumber"];
+    NSInteger convert = [convertNumber integerValue];
+    cell.yiSaoMiaoLabel.text = [NSString stringWithFormat:@"已扫%lu箱",[qtyReceived integerValue]/convert];
+    NSString *qtyShipped = [subData[@"qtyShipped"] isEqual:[NSNull null]]?@"0":subData[@"qtyShipped"];
+    cell.gongJiXiangLabel.text = [NSString stringWithFormat:@"共%lu箱",[qtyShipped integerValue]/convert];
+    NSInteger queShao = [qtyShipped integerValue] - [qtyReceived integerValue]/convert;
     cell.shaoJiXiangLabel.text = [NSString stringWithFormat:@"少%lu箱",queShao];
 
     return cell;
@@ -566,7 +584,55 @@
 {
     NSLog(@"确认收货");
     
+    if(!self.photo)
+    {
+        
+        [Hud showText:@"请拍摄照片"];
+        
+        return;
+    }
     
+    if(self.barCodes.count<1)
+    {
+        [Hud showText:@"未进行收货，不能提交订单"];
+        
+        return;
+    }
+    
+    NSInteger number = [self checkNumber];
+    
+    if(number>0)
+    {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"系统提示" message:[NSString stringWithFormat:@"还差%lu件,确认收货？",number] preferredStyle:UIAlertControllerStyleAlert];
+        
+        [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }]];
+        
+        [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            [self shouHuo];
+            
+        }]];
+        
+        
+        // 为了不产生延时的现象，直接放在主线程中调用
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self presentViewController:alert animated:YES completion:^{
+            }];
+            
+        });
+    }
+    
+    
+
+}
+
+// 执行收货
+-(void)shouHuo
+{
     NSDictionary *receiveLocation = @{@"longitude":[NSString stringWithFormat:@"%f",_longitude?_longitude:0.00],@"latitude":[NSString stringWithFormat:@"%f",_latitude?_latitude:0.00],@"address":self.address,@"imgUrl":self.imageUrl?self.imageUrl:@""};
     // 字典转字符串 并过滤掉空格及换行符
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:receiveLocation options:NSJSONWritingPrettyPrinted error:nil];
@@ -601,7 +667,35 @@
 
 -(void)backAction
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    
+    
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"系统提示" message:@"收货未结束，退出将不会保留已扫箱码，确认退出？" preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    }]];
+    
+    
+    // 为了不产生延时的现象，直接放在主线程中调用
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self presentViewController:alert animated:YES completion:^{
+        }];
+        
+    });
+    
+    
+    
+    
+    
 }
 
 
@@ -635,13 +729,15 @@
         
         NSString *url = [MayiURLManage MayiURLManageWithURL:UploadImage];
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html", nil];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html",@"image/jpeg", nil];
         
         //上传图片，只能用POST
         [manager POST:url parameters:nil constructingBodyWithBlock:^(id  _Nonnull formData) {
             
+//            UIImage *smallImage = [self scaleImage:image toKb:0.1];
+            
             //将图片转成data
-            NSData *data = UIImageJPEGRepresentation(image,0.3);
+            NSData *data = UIImageJPEGRepresentation(image,0.0001);
             //第一个代表文件转换后data数据，第二个代表图片的名字，第三个代表图片放入文件夹的名字，第四个代表文件的类型
             [formData appendPartWithFileData:data name:@"dataFile" fileName:@"file.jpeg" mimeType:@"image/jpeg"];
             
@@ -652,14 +748,12 @@
             
             [Hud stop];
             
-            
             MyLog(@"%@",responseObject);
             
             if([responseObject[@"code"] integerValue]==200)
             {
                 
                 [Hud showText:@"上传成功"];
-                
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
@@ -828,5 +922,63 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+
+// 还差几件
+-(NSInteger )checkNumber
+{
+    
+    NSInteger number = 0;
+    for (NSDictionary *data in self.dataSource) {
+        
+        NSString *qtyReceivedStr = [data[@"qtyReceived"] isEqual:[NSNull null]]?@"0":data[@"qtyReceived"];
+        NSString *qtyStr = [data[@"qty"] isEqual:[NSNull null]]?@"0":data[@"qty"];
+        NSString *convertNumberStr = [data[@"convertNumber"] isEqual:[NSNull null]]?@"0":data[@"convertNumber"];
+        NSInteger qtyReceived = [qtyReceivedStr integerValue];
+        NSInteger qty = [qtyStr integerValue];
+        NSInteger convertNumber = [convertNumberStr integerValue];
+        
+        if(qty-qtyReceived>0)
+        {
+            number += (qty - qtyReceived)/convertNumber;
+        }
+        
+    }
+    
+    return number;
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @end

@@ -19,9 +19,8 @@
     {
         
         [self addSubview:self.nameLabel];
-        [self addSubview:self.timeLabel];
         [self addSubview:self.orderLabel];
-        [self addSubview:self.stateLbael];
+        [self addSubview:self.timeLabel];
         
     }
     return self;
@@ -36,32 +35,25 @@
         
         make.left.equalTo(self).offset(5);
         make.top.equalTo(self).offset(10);
-        make.width.mas_equalTo(ScreenWidth*0.7);
-        
-    }];
-    
-    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        make.left.and.width.equalTo(self.nameLabel);
-        make.top.equalTo(self.nameLabel.mas_bottom).offset(10);
+        make.width.mas_equalTo(ScreenWidth*0.95);
         
     }];
     
     [self.orderLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.left.and.width.equalTo(self.nameLabel);
-        make.top.equalTo(self.timeLabel.mas_bottom).offset(10);
+        make.top.equalTo(self.nameLabel.mas_bottom).offset(10);
         
     }];
     
-    [self.stateLbael mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         
-        make.width.mas_equalTo(ScreenWidth*0.3);
-        make.right.equalTo(self).offset(-5);
-        make.top.equalTo(self.nameLabel);
+        make.left.and.width.equalTo(self.nameLabel);
+        make.bottom.equalTo(self.mas_bottom).offset(-10);
         
     }];
     
+
     
 }
 
@@ -86,7 +78,7 @@
     {
         _timeLabel = [UILabel new];
         _timeLabel.font = [UIFont systemFontOfSize:16];
-        _timeLabel.textAlignment = NSTextAlignmentLeft;
+        _timeLabel.textAlignment = NSTextAlignmentRight;
         _timeLabel.textColor = [UIColor colorWithWhite:50/255.0 alpha:1];
         _timeLabel.text = @"时间";
     }
@@ -106,16 +98,5 @@
     return _orderLabel;
 }
 
--(UILabel *)stateLbael
-{
-    if(!_stateLbael)
-    {
-        _stateLbael = [UILabel new];
-        _stateLbael.font = [UIFont systemFontOfSize:16];
-        _stateLbael.textAlignment = NSTextAlignmentRight;
-        _stateLbael.textColor = [UIColor greenColor];
-        _stateLbael.text = @"状态";
-    }
-    return _stateLbael;
-}
+
 @end

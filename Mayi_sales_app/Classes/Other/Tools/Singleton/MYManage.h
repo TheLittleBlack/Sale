@@ -25,6 +25,7 @@
 @property(nonatomic,strong)NSNumber *userType;
 @property(nonatomic,strong)NSString *ID;
 @property(nonatomic,strong)NSString *passport; // 账号
+@property(nonatomic,assign)BOOL isJPSJ; // 竞品信息开关
 
 // userInfo
 @property(nonatomic,strong)NSString *address;

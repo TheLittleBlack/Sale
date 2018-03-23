@@ -21,7 +21,7 @@
         [self.bodyView addSubview:self.headerImageView];
         [self.headerImageView addSubview:self.headerTitleLabel];
         [self.bodyView addSubview:self.bodyTextLabel];
-//        [self.bodyView addSubview:self.name];
+        [self.bodyView addSubview:self.state];
         [self.bodyView addSubview:self.date];
         [self addSubview:self.isReadView];
 
@@ -102,6 +102,18 @@
     return _name;
 }
 
+-(UILabel *)state
+{
+    if(!_state)
+    {
+        _state = [UILabel new];
+        _state.text = @"未审批";
+        _state.textColor = [UIColor redColor];
+        _state.font = [UIFont systemFontOfSize:12];
+    }
+    return _state;
+}
+
 -(UILabel *)date
 {
     if(!_date)
@@ -173,14 +185,14 @@
         
     }];
 
-//    [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
-//       
-//        make.left.equalTo(self.bodyTextLabel);
-//        make.bottom.equalTo(self).offset(-10-17);
-//        make.width.mas_equalTo(ScreenWidth/2.5);
-//        make.height.mas_equalTo(17);
-//        
-//    }];
+    [self.state mas_makeConstraints:^(MASConstraintMaker *make) {
+       
+        make.left.equalTo(self.bodyTextLabel);
+        make.bottom.equalTo(self).offset(-10-17);
+        make.width.mas_equalTo(ScreenWidth/2.5);
+        make.height.mas_equalTo(17);
+        
+    }];
 
     [self.date mas_makeConstraints:^(MASConstraintMaker *make) {
        

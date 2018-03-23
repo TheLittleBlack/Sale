@@ -107,6 +107,8 @@
 		DDF7E2392061888E009BA7EE /* SaoMaShouHuoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E2382061888E009BA7EE /* SaoMaShouHuoTableViewCell.m */; };
 		DDF7E23C2061F92C009BA7EE /* SaoMaShouHuoFootView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E23B2061F92C009BA7EE /* SaoMaShouHuoFootView.m */; };
 		DDF7E23F2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E23E2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.m */; };
+		DDF7E2422063AF22009BA7EE /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E2412063AF22009BA7EE /* AddTaskViewController.m */; };
+		DDF7E2452063F858009BA7EE /* PriceInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E2442063F858009BA7EE /* PriceInfoViewController.m */; };
 		DDF88B321FF3E2FD009A8C00 /* SignAddressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF88B311FF3E2FD009A8C00 /* SignAddressTableViewCell.m */; };
 		E98DA0583BA57AD3B3D765F3 /* libPods-Mayi_sales_app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D0FB7152AA608D39F79F380 /* libPods-Mayi_sales_app.a */; };
 /* End PBXBuildFile section */
@@ -331,6 +333,10 @@
 		DDF7E23B2061F92C009BA7EE /* SaoMaShouHuoFootView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SaoMaShouHuoFootView.m; sourceTree = "<group>"; };
 		DDF7E23D2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DingDanLieBiaoTableViewCell.h; sourceTree = "<group>"; };
 		DDF7E23E2062DCBD009BA7EE /* DingDanLieBiaoTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DingDanLieBiaoTableViewCell.m; sourceTree = "<group>"; };
+		DDF7E2402063AF22009BA7EE /* AddTaskViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddTaskViewController.h; sourceTree = "<group>"; };
+		DDF7E2412063AF22009BA7EE /* AddTaskViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddTaskViewController.m; sourceTree = "<group>"; };
+		DDF7E2432063F858009BA7EE /* PriceInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PriceInfoViewController.h; sourceTree = "<group>"; };
+		DDF7E2442063F858009BA7EE /* PriceInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PriceInfoViewController.m; sourceTree = "<group>"; };
 		DDF88B301FF3E2FD009A8C00 /* SignAddressTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignAddressTableViewCell.h; sourceTree = "<group>"; };
 		DDF88B311FF3E2FD009A8C00 /* SignAddressTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignAddressTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -590,6 +596,8 @@
 				DDAC78411FFA9F610058D4C1 /* ShowBigImageViewController.m */,
 				DDADB5032003C78E0056205F /* OrderViewController.h */,
 				DDADB5042003C78E0056205F /* OrderViewController.m */,
+				DDF7E2432063F858009BA7EE /* PriceInfoViewController.h */,
+				DDF7E2442063F858009BA7EE /* PriceInfoViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -894,6 +902,8 @@
 			children = (
 				DD484E511FD3CD4A00180A51 /* ScheduleViewController.h */,
 				DD484E521FD3CD4A00180A51 /* ScheduleViewController.m */,
+				DDF7E2402063AF22009BA7EE /* AddTaskViewController.h */,
+				DDF7E2412063AF22009BA7EE /* AddTaskViewController.m */,
 				DDCAFBDD1FEF6978001CDF09 /* PlanVisitViewController.h */,
 				DDCAFBDE1FEF6978001CDF09 /* PlanVisitViewController.m */,
 			);
@@ -1452,6 +1462,8 @@
 				DD1EAF9A1FE9539D00C81D84 /* ScheduleTableViewCell.m in Sources */,
 				DDF1DA8E200AFD9E0041F1C6 /* UpdateViewController.m in Sources */,
 				DDEB13801FEC271E00E08E84 /* LPDVideoPlayerController.m in Sources */,
+				DDF7E2422063AF22009BA7EE /* AddTaskViewController.m in Sources */,
+				DDF7E2452063F858009BA7EE /* PriceInfoViewController.m in Sources */,
 				DDC10A8E1FD84FC40096BBC5 /* SDMajletView.m in Sources */,
 				DDB921341FDD265600C6A674 /* MyNetworkRequest.m in Sources */,
 				DDB9214C1FDD395200C6A674 /* NSString+MD5.m in Sources */,

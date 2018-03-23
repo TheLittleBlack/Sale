@@ -123,6 +123,13 @@
             baseURL = @"order/receive_confirmation.htm";  // 确认收货
         }
             break;
+        case CollectTheSwitch:
+        {
+            baseURL = @"/app/visit_func/get_func_code.htm";  // 竞品收集开关
+        }
+            break;
+            
+
 
     }
     
@@ -234,9 +241,38 @@
             baseURL = @"#/examine/myApproval"; // 查看待办事务
         }
             break;
-        
+        case TaskManage:
+        {
+            baseURL = @"#/task/taskManage"; // 检查按钮
+        }
+            break;
+        case TaskCheck:
+        {
+            baseURL = @"#/task/taskCheck"; // 任务检查
+        }
+            break;
+        case AddDiyTask:
+        {
+            baseURL = @"#/task/addDiyTask"; // 添加自定义任务
+        }
+            break;
+        case TaskPool:
+        {
+            baseURL = @"#/task/taskPool"; // 添加任务
+        }
+            break;
+        case CompetingGoodsCollection:
+        {
+            baseURL = @"#/compertInfoList/"; // 竞品收集
+        }
+            break;
+        case PriceAnomalies:
+        {
+            baseURL = @"#/visitPriceList/"; // 价格异常
+        }
+            break;
 
-            
+
     }
     
 

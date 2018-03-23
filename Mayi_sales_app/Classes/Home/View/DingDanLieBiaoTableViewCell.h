@@ -13,6 +13,6 @@
 @property(nonatomic,strong)UILabel *nameLabel;
 @property(nonatomic,strong)UILabel *timeLabel;
 @property(nonatomic,strong)UILabel *orderLabel;
-@property(nonatomic,strong)UILabel *stateLbael;
+
 
 @end

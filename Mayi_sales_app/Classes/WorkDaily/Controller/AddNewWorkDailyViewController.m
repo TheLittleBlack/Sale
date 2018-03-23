@@ -575,7 +575,7 @@
     [manager POST:url parameters:nil constructingBodyWithBlock:^(id  _Nonnull formData) {
         
         //将图片转成data
-        NSData *data = UIImageJPEGRepresentation(image,0.3);
+        NSData *data = UIImageJPEGRepresentation(image,0.0001);
         //第一个代表文件转换后data数据，第二个代表图片的名字，第三个代表图片放入文件夹的名字，第四个代表文件的类型
         [formData appendPartWithFileData:data name:@"dataFile" fileName:@"file.jpeg" mimeType:@"image/jpeg"];
         

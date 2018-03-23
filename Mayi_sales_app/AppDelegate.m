@@ -186,8 +186,8 @@
     // 当应用在前台时，不推送
     if([UIApplication sharedApplication].applicationState == UIApplicationStateActive){
         //关闭对话框
-        [UMessage setAutoAlert:NO];
-//        [self goToMessageDetails:url];
+//        [UMessage setAutoAlert:NO];
+        [self goToMessageDetails:url];
         
     }
     [UMessage didReceiveRemoteNotification:userInfo];
@@ -218,7 +218,7 @@
     NSString *url = userInfo[@"pathUrl"];
     MyLog(@"url:%@",url);
     
-//    [self goToMessageDetails:url];
+    [self goToMessageDetails:url];
     
     if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         

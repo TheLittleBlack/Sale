@@ -379,7 +379,7 @@
     }
     else if(indexPath.section==2) // 知识分享
     {
-        MDVC.type = 1;
+        MDVC.type = 2;
     }
     else if(indexPath.section==3) // 工作消息
     {
