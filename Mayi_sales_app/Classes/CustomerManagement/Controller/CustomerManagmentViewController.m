@@ -7,12 +7,25 @@
 //
 
 #import "CustomerManagmentViewController.h"
-#import <JavaScriptCore/JavaScriptCore.h>
+#import <MAMapKit/MAMapKit.h>
+#import <AMapFoundationKit/AMapFoundationKit.h>
+#import <AMapSearchKit/AMapSearchKit.h>
 
-@interface CustomerManagmentViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface CustomerManagmentViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,MAMapViewDelegate,AMapSearchDelegate>
+
+{
+    CGFloat _longitude;
+    CGFloat _latitude;
+    BOOL _canlocation;
+}
+
 
 @property(nonatomic,strong)NSString *cloudId;
 @property(nonatomic,strong)NSString *cloudNo;
+@property(nonatomic,strong)MAMapView *mapView;
+@property(nonatomic,strong)AMapSearchAPI *search;
+@property(nonatomic,strong)NSString *address;
+
 
 @end
 
@@ -21,9 +34,37 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _canlocation = YES;
     
     
+    [self.mapView reloadMap];
     
+}
+
+-(MAMapView *)mapView
+{
+    if(!_mapView)
+    {
+        //初始化地图
+        _mapView = [MAMapView new];
+        [AMapServices sharedServices].enableHTTPS = NO;
+        _mapView.zoomLevel = 16;
+        _mapView.userTrackingMode = MAUserTrackingModeFollow;
+        _mapView.showsUserLocation = YES;
+        _mapView.delegate = self;
+        [_mapView setDesiredAccuracy:kCLLocationAccuracyBest];
+    }
+    return _mapView;
+}
+
+-(AMapSearchAPI *)search
+{
+    if(!_search)
+    {
+        _search = [AMapSearchAPI new];
+        self.search.delegate = self;
+    }
+    return _search;
 }
 
 //加载完成
@@ -31,9 +72,15 @@
 {
     MyLog(@"加载完成");
     [Hud stop];
+    
+    self.context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation({\"longitude\":122.23,\"latitude\":12.323})"];
+    [self.context evaluateScript:textJS];
+    
 
     
-    JSContext *context=[webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    JSContext *context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     
     context[@"saveCustomerPhoto"] = ^(){
 
@@ -161,6 +208,42 @@
         
     }];
     
+}
+
+
+
+// 更新位置成功后调用
+- (void)mapView:(MAMapView *)mapView didUpdateUserLocation:(MAUserLocation *)userLocation updatingLocation:(BOOL)updatingLocation
+{
+    if(_canlocation)
+    {
+        
+        AMapReGeocodeSearchRequest *regeo = [[AMapReGeocodeSearchRequest alloc] init];
+        
+        regeo.location = [AMapGeoPoint locationWithLatitude:userLocation.coordinate.latitude longitude:userLocation.coordinate.longitude];
+        _longitude = userLocation.coordinate.longitude;
+        _latitude = userLocation.coordinate.latitude;
+        [self.search AMapReGoecodeSearch:regeo];  // 开始逆地理编码
+        
+        _canlocation = NO;
+    }
+    
+    
+}
+
+
+/* 逆地理编码回调. */
+- (void)onReGeocodeSearchDone:(AMapReGeocodeSearchRequest *)request response:(AMapReGeocodeSearchResponse *)response
+{
+    if (response.regeocode != nil && ![response.regeocode.formattedAddress isEqualToString:@""])
+    {
+    
+        self.address = response.regeocode.formattedAddress;
+    }
+    else
+    {
+        self.address = @"定位失败，请重新定位";
+    }
 }
 
 @end

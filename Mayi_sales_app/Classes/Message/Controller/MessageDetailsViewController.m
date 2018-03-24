@@ -595,18 +595,24 @@
         cell.bodyView.backgroundColor = MyColorHex(0xFCF9E3);
     }
     
-    NSString *dealStr = [dic[@"isDeal"] isEqual:[NSNull null]]?@"0":dic[@"isDeal"];
-    NSInteger deal = [dealStr integerValue];
-    if(deal==1)
+    // 审批事务需要显示此项
+    
+    if(self.type==3)
     {
-        cell.state.text = @"已审批";
-        cell.state.textColor = [UIColor greenColor];
+        NSString *dealStr = [dic[@"isDeal"] isEqual:[NSNull null]]?@"0":dic[@"isDeal"];
+        NSInteger deal = [dealStr integerValue];
+        if(deal==1)
+        {
+            cell.state.text = @"已审批";
+            cell.state.textColor = [UIColor greenColor];
+        }
+        else
+        {
+            cell.state.text = @"未审批";
+            cell.state.textColor = [UIColor redColor];
+        }
     }
-    else
-    {
-        cell.state.text = @"未审批";
-        cell.state.textColor = [UIColor redColor];
-    }
+
     
     return cell;
 }

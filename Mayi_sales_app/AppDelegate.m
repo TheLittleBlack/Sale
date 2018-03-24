@@ -169,31 +169,15 @@
 
 -(void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler
 {
-    NSLog(@"按钮：identifier:%@",identifier);//
-    
-    [UMessage sendClickReportForRemoteNotification:userInfo];
     //通过identifier对各个交互式的按钮进行业务处理
-}
-
-
-//iOS10之前使用这个方法接收通知
-// 前台状态
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-{
-   
-    NSString *url = userInfo[@"pathUrl"];
+    [UMessage sendClickReportForRemoteNotification:userInfo];
     
-    // 当应用在前台时，不推送
-    if([UIApplication sharedApplication].applicationState == UIApplicationStateActive){
-        //关闭对话框
-//        [UMessage setAutoAlert:NO];
-        [self goToMessageDetails:url];
-        
-    }
-    [UMessage didReceiveRemoteNotification:userInfo];
 }
 
-// 后台状态
+
+
+
+// iOS 7之后接收通知 (这是点击通知才会响应的方法)
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler
 {
     NSString *url = userInfo[@"pathUrl"];
@@ -201,8 +185,8 @@
     // 当应用在前台时，不推送
     if([UIApplication sharedApplication].applicationState == UIApplicationStateActive){
         //关闭对话框
-        [UMessage setAutoAlert:NO];
-//        [self goToMessageDetails:url];
+//        [UMessage setAutoAlert:NO];
+        [self goToMessageDetails:url];
         
     }
     [UMessage didReceiveRemoteNotification:userInfo];
@@ -220,55 +204,32 @@
     
     [self goToMessageDetails:url];
     
-    if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-        
-        
-        //可以自定义前台弹出框
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"userInfoNotification" object:self userInfo:userInfo];
-        
-        //应用处于前台时的远程推送接受
-        //关闭友盟自带的弹出框
-        [UMessage setAutoAlert:NO];
-//        //必须加这句代码
-        [UMessage didReceiveRemoteNotification:userInfo];
-        
-    }else{
-        //应用处于前台时的本地推送接受
-    }
+    //关闭友盟自带的弹出框
+    [UMessage setAutoAlert:NO];
+    //必须加这句代码
+    [UMessage didReceiveRemoteNotification:userInfo];
+    
+    
     //当应用处于前台时提示设置，需要哪个可以设置哪一个
     completionHandler(UNNotificationPresentationOptionSound|UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionAlert);
+    
 }
 
 //iOS10新增：处理后台点击通知的代理方法
-//iOS10以后接收的方法
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler{
     NSDictionary * userInfo = response.notification.request.content.userInfo;
-    NSLog(@"后台括号外：userNotificationCenter:didReceiveNotificationResponse");
-    if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-        NSLog(@"后台括号内：userNotificationCenter:didReceiveNotificationResponse");
-        
-        //        代理方法
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"userInfoNotification" object:self userInfo:userInfo];
-        
-        [UMessage didReceiveRemoteNotification:userInfo];
-        if([response.actionIdentifier isEqualToString:@"*****你定义的action id****"])
-        {
-            
-        }else
-        {
-            
-        }
-        //这个方法用来做action点击的统计
-        [UMessage sendClickReportForRemoteNotification:userInfo];
-        
-    }else{
-        //应用处于后台时的本地推送接受
-    }
+
+    NSLog(@"后台括号内：userNotificationCenter:didReceiveNotificationResponse");
+    
+    [UMessage didReceiveRemoteNotification:userInfo];
+    
+    //这个方法用来做action点击的统计
+    [UMessage sendClickReportForRemoteNotification:userInfo];
     
 
     NSString *url = userInfo[@"pathUrl"];
     
-//    [self goToMessageDetails:url];
+    [self goToMessageDetails:url];
 }
 
 

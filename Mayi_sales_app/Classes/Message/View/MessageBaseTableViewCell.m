@@ -107,7 +107,7 @@
     if(!_state)
     {
         _state = [UILabel new];
-        _state.text = @"未审批";
+        _state.text = @" ";
         _state.textColor = [UIColor redColor];
         _state.font = [UIFont systemFontOfSize:12];
     }

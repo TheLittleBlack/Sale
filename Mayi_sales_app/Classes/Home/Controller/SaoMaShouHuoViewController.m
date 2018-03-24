@@ -462,7 +462,7 @@
     cell.yiSaoMiaoLabel.text = [NSString stringWithFormat:@"已扫%lu箱",[qtyReceived integerValue]/convert];
     NSString *qtyShipped = [subData[@"qtyShipped"] isEqual:[NSNull null]]?@"0":subData[@"qtyShipped"];
     cell.gongJiXiangLabel.text = [NSString stringWithFormat:@"共%lu箱",[qtyShipped integerValue]/convert];
-    NSInteger queShao = [qtyShipped integerValue] - [qtyReceived integerValue]/convert;
+    NSInteger queShao = ([qtyShipped integerValue] - [qtyReceived integerValue])/convert;
     cell.shaoJiXiangLabel.text = [NSString stringWithFormat:@"少%lu箱",queShao];
 
     return cell;
@@ -539,7 +539,6 @@
 {
     if (response.regeocode != nil && ![response.regeocode.formattedAddress isEqualToString:@""])
     {
-        
         self.addressLabel.text = response.regeocode.formattedAddress;
         self.address = response.regeocode.formattedAddress;
     }
@@ -813,7 +812,7 @@
 
     [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:ScanReceive] withPrameters:@{@"orderSn":self.data[@"orderSn"],@"barCode":QRString} result:^(id result) {
         
-        [Hud showText:result[@"data"][@"message"]];
+        [Hud showText:result[@"data"][@"data"][@"message"]];
         
         NSInteger errorType = [result[@"data"][@"data"][@"errorType"] integerValue];
         if(errorType==0)
@@ -821,7 +820,9 @@
             NSLog(@"收货成功");
             [self.barCodes addObject:QRString];
             
-            [self updateDate];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self updateDate];
+            });
             
         }
         

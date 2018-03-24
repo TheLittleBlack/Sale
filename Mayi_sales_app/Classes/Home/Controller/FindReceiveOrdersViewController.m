@@ -286,13 +286,13 @@
         
         NSDictionary *data = self.cacheArray[i];
         NSString *name = [data[@"customerName"] isEqual:[NSNull null]]?@"":data[@"customerName"];
-        NSString *order = data[@"orderSn"] ;
-        if([name isEqualToString:key])
+        NSString *order = data[@"orderSn"];
+        if([name containsString:key])
         {
             [self.dataSource addObject:data];
         }
         
-        if([order isEqualToString:key])
+        if([order containsString:key])
         {
             [self.dataSource addObject:data];
         }

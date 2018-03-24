@@ -190,8 +190,17 @@
         [_session addOutput:self.output];
     }
     
+    //    AVMetadataObjectTypeEAN13Code,
+    //    AVMetadataObjectTypeEAN8Code,
+    //    AVMetadataObjectTypeUPCECode,
+    //    AVMetadataObjectTypeCode39Code,
+    //    AVMetadataObjectTypeCode39Mod43Code,
+    //    AVMetadataObjectTypeCode93Code,
+    //    AVMetadataObjectTypeCode128Code,
+    //    AVMetadataObjectTypePDF417Code
+    
     // 条码类型 AVMetadataObjectTypeQRCode
-    [_output setMetadataObjectTypes:[NSArray arrayWithObjects:AVMetadataObjectTypeQRCode, nil]];
+    [_output setMetadataObjectTypes:[NSArray arrayWithObjects:AVMetadataObjectTypeQRCode,AVMetadataObjectTypeCode128Code,AVMetadataObjectTypeEAN13Code,AVMetadataObjectTypeEAN8Code,AVMetadataObjectTypeUPCECode,AVMetadataObjectTypeCode39Code,AVMetadataObjectTypeCode39Mod43Code,AVMetadataObjectTypeCode93Code,AVMetadataObjectTypeCode128Code,AVMetadataObjectTypePDF417Code,nil]];
     
     // Preview
     _preview =[AVCaptureVideoPreviewLayer layerWithSession:_session];
