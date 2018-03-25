@@ -129,6 +129,7 @@
     if(self.dataSourceArray.count>0)
     {
         NSDictionary *itemData = self.dataSourceArray[indexPath.row];
+        
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.delegate = self;
@@ -188,11 +189,35 @@
         else if (type==3)
         {
             cell.iconImageView.image = [UIImage imageNamed:@"icon_hunyan 3"];
+            cell.rightButton.hidden = YES;
+            cell.finishImageView.hidden = YES;
         }
         else if (type==4)
         {
             cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
+            cell.rightButton.hidden = YES;
+            cell.finishImageView.hidden = YES;
         }
+        else if(type==5)
+        {
+            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
+            cell.rightButton.hidden = YES;
+            cell.finishImageView.hidden = YES;
+        }
+        else if(type==6)
+        {
+            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
+            cell.rightButton.hidden = YES;
+            cell.finishImageView.hidden = YES;
+        }
+        else if(type==7)
+        {
+            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
+            cell.rightButton.hidden = YES;
+            cell.finishImageView.hidden = YES;
+        }
+        
+        
         
     }
     
@@ -202,6 +227,10 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(self.dataSourceArray.count<1)
+    {
+        return;
+    }
     NSDictionary *itemData = self.dataSourceArray[indexPath.row];
     NSInteger status = [itemData[@"status"] integerValue];
     if(status==3)
@@ -210,7 +239,26 @@
         BWVC.urlString = [NSString stringWithFormat:@"%@%@&0",[MayiURLManage MayiWebURLManageWithURL:VisitDetails],itemData[@"id"]];
         BWVC.hidesBottomBarWhenPushed = YES;
         [self.currentVC.navigationController pushViewController:BWVC animated:YES];
+        
+        return;
     }
+    
+    NSInteger type = [itemData[@"businessType"] integerValue];
+    
+    if(type==3 ||type==4 ||type==5 ||type==7 )
+    {
+        BaseWebViewController *BWVC = [BaseWebViewController new];
+        BWVC.urlString = [NSString stringWithFormat:@"%@/%@",[MayiURLManage MayiWebURLManageWithURL:TaskCheck],itemData[@"businessKey"]]; // 或者是itemData[@"id"]
+        BWVC.hidesBottomBarWhenPushed = YES;
+        [self.currentVC.navigationController pushViewController:BWVC animated:YES];
+    }
+    
+    // 自定义特殊跳转
+    if(type==6)
+    {
+        NSLog(@"自定义特殊跳转");
+    }
+    
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section

@@ -19,13 +19,11 @@
     BOOL _canlocation;
 }
 
-
 @property(nonatomic,strong)NSString *cloudId;
 @property(nonatomic,strong)NSString *cloudNo;
 @property(nonatomic,strong)MAMapView *mapView;
 @property(nonatomic,strong)AMapSearchAPI *search;
 @property(nonatomic,strong)NSString *address;
-
 
 @end
 
@@ -75,12 +73,27 @@
     
     self.context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     
-    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation({\"longitude\":122.23,\"latitude\":12.323})"];
-    [self.context evaluateScript:textJS];
+    NSDictionary *locations = @{@"longitude":@(119.189415),@"latitude":@(34.006969)};
+    
+    NSDictionary *testDic = @{@"locations":locations};
+    // 字典转字符串 并过滤掉空格及换行符
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:testDic options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *DicString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@" " withString:@""];
     
 
     
+    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation(%@)",DicString];
+    
+//    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation({\"longitude\":119.189415,\"latitude\":34.006969,\"address\":\"test\"})"];
+    [self.context evaluateScript:textJS];
+
+    
     JSContext *context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    
     
     context[@"saveCustomerPhoto"] = ^(){
 
@@ -92,6 +105,10 @@
         MyLog(@"%@,%@",[args[0] toString],[args[1] toString]);
         
     };
+    
+    
+
+    
     
 }
 

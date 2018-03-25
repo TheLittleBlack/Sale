@@ -115,25 +115,7 @@
     [self checkUpdate];
 
     
-    // 竞品信息开关
-    [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:CollectTheSwitch] withPrameters:@{} result:^(id result) {
-        
-        NSLog(@"%@",result);
-        NSArray *array = result[@"data"];
-        if(array.count>0)
-        {
-            for (NSString *subData in array) {
-                if([subData isEqualToString:@"JPSJ"])
-                {
-                    [MYManage defaultManager].isJPSJ = YES;
-                }
-            }
-        }
-        
-    } error:^(id error) {
-        
-    } withHUD:NO];
-    
+
 }
 
 
@@ -260,11 +242,11 @@
     else if([selectItemName isEqualToString:@"活动检查"])
     {
         
-//        ActivitiesCheckViewController * ACVC = [ActivitiesCheckViewController new];
-//        ACVC.urlString = [MayiURLManage MayiWebURLManageWithURL:ActivitiesCheck];
-//        [ACVC setHidesBottomBarWhenPushed:YES];
-//        [self.navigationController pushViewController:ACVC animated:YES];
-        [Hud showText:@"敬请期待"]; // 没接口
+        ActivitiesCheckViewController * ACVC = [ActivitiesCheckViewController new];
+        ACVC.urlString = [MayiURLManage MayiWebURLManageWithURL:ActivitiesCheck];
+        [ACVC setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:ACVC animated:YES];
+        
     }
     else if([selectItemName isEqualToString:@"客户管理"])
     {

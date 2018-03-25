@@ -9,11 +9,19 @@
 #import <UIKit/UIKit.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
-@interface BaseWebViewController : UIViewController
+@protocol TestJSExport <JSExport>
+
+-(void)callPhone:(NSString *)phoneNumber; // 打电话
+-(void)takePhotos; // 打开相机
+
+@end
+
+
+@interface BaseWebViewController : UIViewController <TestJSExport>
 
 @property(nonatomic,strong)UIWebView *webView;
 @property(nonatomic,copy)NSString *urlString;
-@property(nonatomic,assign)BOOL autoManageBack ; // 是否自动监听返回事件 默认为Yes
+@property(nonatomic,assign)BOOL autoManageBack; // 是否自动监听返回事件 默认为Yes
 @property(nonatomic,strong)JSContext *context;
 
 -(void)urlActionType:(NSString *)actionString; // 通过该方法将点击类型丢给子类实现

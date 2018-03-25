@@ -35,5 +35,29 @@
 }
 
 
+//加载完成
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    MyLog(@"加载完成");
+    [Hud stop];
+    
+    self.context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    self.context[@"takePhotos"] = ^(){
+        
+        NSArray *args = [JSContext currentArguments];
+        
+        MyLog(@"sssss");
+        
+    };
+    
+    
+    
+    
+    
+}
+
+
+
 
 @end

@@ -72,6 +72,27 @@
     
     _isSecondAppear = YES;
     
+    
+    // 竞品信息开关
+    [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:CollectTheSwitch] withPrameters:@{} result:^(id result) {
+        
+        NSLog(@"%@",result);
+        NSArray *array = result[@"data"];
+        if(array.count>0)
+        {
+            for (NSString *subData in array) {
+                if([subData isEqualToString:@"JPSJ"])
+                {
+                    [MYManage defaultManager].isJPSJ = YES;
+                }
+            }
+        }
+        
+    } error:^(id error) {
+        
+    } withHUD:NO];
+    
+    
 }
 
 - (void)viewDidLoad {

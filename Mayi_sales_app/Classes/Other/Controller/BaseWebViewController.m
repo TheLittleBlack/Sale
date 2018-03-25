@@ -8,8 +8,9 @@
 
 #import "BaseWebViewController.h"
 #import "LoginViewController.h"
+#import "ScanQRCodeViewController.h"
 
-@interface BaseWebViewController () <UIWebViewDelegate>
+@interface BaseWebViewController () <UIWebViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 
 @property(nonatomic,strong)UIView *stateView;
@@ -118,10 +119,63 @@
     self.navigationController.navigationBar.hidden = YES;
     [Hud stop];
     
+    JSContext *context=[webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    // 获取js调用的方法
+    context[@"takePhotos"] = ^(){
+        
+        NSLog(@"打开相机");
+        
+        [self openCamera];
+        
+    };
+    
+    context[@"scanCode"] = ^(){
+        
+        NSLog(@"扫描二维码");
+        
+        ScanQRCodeViewController *SQRC = [ScanQRCodeViewController new];
+        [self.navigationController pushViewController:SQRC animated:YES];
+        
+    };
+    
+    context[@"callPhone"] = ^(){
+        
+        NSLog(@"打电话");
+        
+        NSArray *args = [JSContext currentArguments];
+        
+        NSString *phoneNumber = args[0];
+        
+        if(phoneNumber&&![phoneNumber isEqualToString:@""]&&![phoneNumber isEqualToString:@"null"])
+        {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                UIWebView *callWebView = [[UIWebView alloc] init];
+                NSURL *telURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",phoneNumber]];
+                [callWebView loadRequest:[NSURLRequest requestWithURL:telURL]];
+                [self.view addSubview:callWebView];
+                
+            });
+            
+        }
+        
+        
+        MyLog(@"%@",phoneNumber);
+        
+    };
+    
+    
+
+            
+    
+    
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    
     NSURL *URL = request.URL;
     MyLog(@"请求的URL：%@",URL);
     [self requestUrl:[NSString stringWithFormat:@"%@",URL]];
@@ -133,6 +187,12 @@
     
     NSString *urlStr = [NSString stringWithFormat:@"%@",URL];
     NSString *lastStr = [urlStr substringWithRange:NSMakeRange(urlStr.length-4, 4)];
+    
+    if([urlStr containsString:@"mayisale://mobile.task.manage.goBack"])
+    {
+        [self.navigationController popViewControllerAnimated:YES];
+        return NO;
+    }
     
     // 自动返回
     if ([lastStr isEqualToString:@"Back"]&&self.autoManageBack) {
@@ -148,7 +208,7 @@
         }
         else
         {
-            [self.navigationController popToRootViewControllerAnimated:YES];  // 不能则pop回去
+            [self.navigationController popToRootViewControllerAnimated:YES]; // 不能则pop回去
         }
         
         return NO;
@@ -192,10 +252,18 @@
     
 }
 
+-(void)callPhone:(NSString *)phoneNumber
+{
+    NSLog(@"打电话");
+}
+
+-(void)takePhotos
+{
+    NSLog(@"打开相机");
+}
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    
     MyLog(@"web加载出错：%@",[error localizedDescription]);
     self.navigationController.navigationBar.hidden = NO;
     [Hud stop];
@@ -213,10 +281,115 @@
     
 }
 
-
 -(void)backAction
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+
+
+
+
+
+
+
+//打开相机
+-(void)openCamera
+{
+    UIImagePickerController *imagrPicker = [[UIImagePickerController alloc]init];
+    imagrPicker.delegate = self;
+    
+    imagrPicker.sourceType = UIImagePickerControllerSourceTypeCamera; // UIImagePickerControllerSourceTypePhotoLibrary
+    
+    [self presentViewController:imagrPicker animated:YES completion:nil];
+    
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
+    //获取选中的照片
+    UIImage *image = info[UIImagePickerControllerEditedImage];
+    
+    
+    
+    if (!image) {
+        image = info[UIImagePickerControllerOriginalImage];
+    }
+    
+    [picker dismissViewControllerAnimated:YES completion:^{
+        
+        [Hud showUpload];
+        
+        
+        NSString *url = [MayiURLManage MayiURLManageWithURL:UploadImage];
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html", nil];
+        
+        //上传图片，只能用POST
+        [manager POST:url parameters:nil constructingBodyWithBlock:^(id  _Nonnull formData) {
+            
+            //将图片转成data
+            NSData *data = UIImageJPEGRepresentation(image,0.0001);
+            //第一个代表文件转换后data数据，第二个代表图片的名字，第三个代表图片放入文件夹的名字，第四个代表文件的类型
+            [formData appendPartWithFileData:data name:@"dataFile" fileName:@"file.jpeg" mimeType:@"image/jpeg"];
+            
+        } progress:^(NSProgress * _Nonnull uploadProgress) {
+            MyLog(@"uploadProgress = %@",uploadProgress);
+        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [Hud stop];
+            
+            
+            MyLog(@"%@",responseObject);
+            
+            if([responseObject[@"code"] integerValue]==200)
+            {
+                
+                [Hud showText:@"上传成功"];
+                NSDictionary *dict = responseObject[@"data"];
+                
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
+            
+            [Hud stop];
+            
+            [Hud showText:@"网络出错，请重新上传"];
+            
+            MyLog(@"error = %@",error);
+        }];
+        
+        
+        
+        
+        
+    }];
+}
+
+//点击取消
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @end

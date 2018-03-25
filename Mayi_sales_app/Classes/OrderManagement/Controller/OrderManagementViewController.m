@@ -56,12 +56,10 @@
             NSURL *telURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",phoneNumber]];
             [callWebView loadRequest:[NSURLRequest requestWithURL:telURL]];
             [self.view addSubview:callWebView];
-            
         });
-        
     };
     
-
+    
     
     NSURL *URL = request.URL;
     NSString *urlStr = [NSString stringWithFormat:@"%@",URL];

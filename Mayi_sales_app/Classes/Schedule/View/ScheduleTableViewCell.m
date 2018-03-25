@@ -48,7 +48,7 @@
         _myTitleLabel = [UILabel  new];
         _myTitleLabel.textColor = [UIColor blackColor];
         _myTitleLabel.font = [UIFont systemFontOfSize:14];
-        _myTitleLabel.text = @"标题";
+        _myTitleLabel.text = @" ";
     }
     return _myTitleLabel;
 }
@@ -60,7 +60,7 @@
         _myDescribeLabel = [UILabel new];
         _myDescribeLabel.textColor = [UIColor colorWithWhite:165/255.0 alpha:1];
         _myDescribeLabel.font = [UIFont systemFontOfSize:13];
-        _myDescribeLabel.text = @"描述";
+        _myDescribeLabel.text = @" ";
         
     }
     return _myDescribeLabel;

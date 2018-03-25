@@ -30,4 +30,25 @@
     
 }
 
+
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    MyLog(@"加载完成");
+    [Hud stop];
+    
+    JSContext *context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    
+    context[@"scanCode"] = ^(){
+        
+        NSArray *args = [JSContext currentArguments];
+        
+        MyLog(@"%@",[args[0] toString]);
+        
+    };
+    
+}
+
+
+
 @end

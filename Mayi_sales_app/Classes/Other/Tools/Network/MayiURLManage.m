@@ -213,7 +213,7 @@
             break;
         case ActivitiesCheck:
         {
-            baseURL = @" "; // 活动检查
+            baseURL = @"#/task/taskManage"; // 活动检查
         }
             break;
         case VisitDetails:

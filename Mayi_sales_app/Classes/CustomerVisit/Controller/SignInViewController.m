@@ -327,7 +327,7 @@
         NSString *timeStamp = [NSString stringWithFormat:@"%ld", (long)[nowDate timeIntervalSince1970]*1000];
  
         AMapPOI *poi = self.dataSource[_selectRow];
-        NSDictionary *gps = @{@"cloudId":self.visitID,@"type":[NSString stringWithFormat:@"%lu",self.type],@"longitude":[NSString stringWithFormat:@"%.6f",poi.location.longitude],@"latitude":[NSString stringWithFormat:@"%.6f",poi.location.latitude],@"address":poi.address,@"userId":[MYManage defaultManager].ID,@"gpsDatetime":timeStamp};
+        NSDictionary *gps = @{@"cloudId":self.visitID,@"type":[NSString stringWithFormat:@"%lu",self.type],@"longitude":[NSString stringWithFormat:@"%.6f",poi.location.longitude],@"latitude":[NSString stringWithFormat:@"%.6f",poi.location.latitude],@"address":[poi.address isEqual:[NSNull null]]?@" ":poi.address,@"userId":[MYManage defaultManager].ID,@"gpsDatetime":timeStamp};
         
         // 字典转字符串 并过滤掉空格及换行符
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:gps options:NSJSONWritingPrettyPrinted error:nil];
@@ -359,17 +359,6 @@
             }
             else // 普通拜访
             {
-//                CustomerVisitViewController *CVVC = [CustomerVisitViewController new];
-//                CVVC.visitID = self.visitID;
-//                CVVC.storeName = poi.name;
-//                CVVC.address = poi.address;
-//                CVVC.AD = poi.name;
-//                CVVC.hidesBottomBarWhenPushed = YES;
-//                CVVC.storeName = self.storeName;
-//                [self.navigationController pushViewController:CVVC animated:YES];
-                
-                
-                
                 
                 [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:TakeOutVisitInformation] withPrameters:@{@"visitId":self.visitID} result:^(id result) {
                     
@@ -385,11 +374,7 @@
                 } error:^(id error) {
                     
                 } withHUD:YES];
-                
-                
-                
-                
-                
+
                 
             }
             
