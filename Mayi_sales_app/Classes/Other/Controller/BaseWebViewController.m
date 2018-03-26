@@ -140,40 +140,32 @@
             [self.navigationController pushViewController:SQRC animated:YES];
             
         });
- 
-        
+
     };
+
     
+
     context[@"callPhone"] = ^(){
+
+        NSArray *args = [JSContext currentArguments];
+
+        NSString *phoneNumber = [args[0] toString];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        if(phoneNumber&&![phoneNumber isEqualToString:@""]&&![phoneNumber isEqualToString:@"null"])
+        {
             
-            NSLog(@"打电话");
-            
-            NSArray *args = [JSContext currentArguments];
-            
-            NSString *phoneNumber = args[0];
-        
-            if(phoneNumber&&![phoneNumber isEqualToString:@""]&&![phoneNumber isEqualToString:@"null"])
-            {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    UIWebView *callWebView = [[UIWebView alloc] init];
-                    NSURL *telURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",phoneNumber]];
-                    [callWebView loadRequest:[NSURLRequest requestWithURL:telURL]];
-                    [self.view addSubview:callWebView];
-                    
-                });
+                UIWebView *callWebView = [[UIWebView alloc] init];
+                NSURL *telURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",phoneNumber]];
+                [callWebView loadRequest:[NSURLRequest requestWithURL:telURL]];
+                [self.view addSubview:callWebView];
                 
-            }
+            });
             
-            
-            MyLog(@"%@",phoneNumber);
-            
-            
-            
-        });
+        }
+
+        MyLog(@"%@",phoneNumber);
 
     };
     

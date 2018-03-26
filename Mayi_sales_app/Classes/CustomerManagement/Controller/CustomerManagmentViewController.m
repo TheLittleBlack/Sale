@@ -73,22 +73,24 @@
     
     self.context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     
-    NSDictionary *locations = @{@"longitude":@(119.189415),@"latitude":@(34.006969)};
-    
-    NSDictionary *testDic = @{@"locations":locations};
-    // 字典转字符串 并过滤掉空格及换行符
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:testDic options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *DicString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    DicString = [DicString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-    DicString = [DicString stringByReplacingOccurrencesOfString:@"\r" withString:@""];
-    DicString = [DicString stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-
-    
-    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation(%@)",DicString];
-    
-//    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation({\"longitude\":119.189415,\"latitude\":34.006969,\"address\":\"test\"})"];
-    [self.context evaluateScript:textJS];
+//    NSDictionary *locations = @{@"longitude":@(119.189415),@"latitude":@(34.006969)};
+//
+//    NSDictionary *testDic = @{@"locations":locations};
+//    // 字典转字符串 并过滤掉空格及换行符
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:testDic options:NSJSONWritingPrettyPrinted error:nil];
+//    NSString *DicString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    DicString = [DicString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+//    DicString = [DicString stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+//    DicString = [DicString stringByReplacingOccurrencesOfString:@" " withString:@""];
+//
+//
+//
+//    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation(%@)",DicString];
+//
+////    @"{\"longitude\":119.189415,\"latitude\":34.006968}"
+////    @"{\"longitude\":119.189415,\"latitude\":34.006969,\"address\":\"test\"}"
+////    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation({\"longitude\":119.189415,\"latitude\":34.006969,\"address\":\"test\"})"];
+//    [self.context evaluateScript:textJS];
 
     
     JSContext *context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
@@ -256,11 +258,38 @@
     {
     
         self.address = response.regeocode.formattedAddress;
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            
+            NSDictionary *dict = @{@"longitude":@(_longitude),@"latitude":@(_latitude),@"address":self.address};
+            NSDictionary *obj = @{@"locations":dict};
+            NSString *json = [self dictionaryToJson:obj];
+            NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation(%@)",json];
+            [self.context evaluateScript:textJS];
+            
+        });
+        
     }
     else
     {
         self.address = @"定位失败，请重新定位";
     }
 }
+
+// 将对象转化为json格式
+-(NSString*)dictionaryToJson:(NSDictionary *)dic
+{
+    NSError *parseError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
+    NSString *DicString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+    DicString = [DicString stringByReplacingOccurrencesOfString:@" " withString:@""];
+    return DicString;
+}
+
+
+// @"{\"address\":\"广东省深圳市龙岗区坂田街道永香路100号坂田国际中心\",\"longitude\":114.07667371961806,\"latitude\":22.619555664062499}"
 
 @end

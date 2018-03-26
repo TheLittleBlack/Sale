@@ -60,7 +60,6 @@
     };
     
     
-    
     NSURL *URL = request.URL;
     NSString *urlStr = [NSString stringWithFormat:@"%@",URL];
     MyLog(@"请求的URL：%@",urlStr);

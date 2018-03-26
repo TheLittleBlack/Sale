@@ -12,4 +12,6 @@
 
 @interface ScanQRCodeViewController : UIViewController
 
+@property(nonatomic,strong)NSString *type;
+
 @end

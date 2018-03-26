@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ScanQR:) name:@"ScanQRFinishForPrice" object:nil];
     
 }
 
@@ -40,6 +40,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     MyLog(@"加载完成");
+    self.context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     self.navigationController.navigationBar.hidden = YES;
     [Hud stop];
     
@@ -65,6 +66,7 @@
             NSLog(@"扫描二维码");
             
             ScanQRCodeViewController *SQRC = [ScanQRCodeViewController new];
+            SQRC.type = @"价格异常";
             UINavigationController *NVC = [[UINavigationController alloc]initWithRootViewController:SQRC];
             [self presentViewController:NVC animated:YES completion:^{
                 
@@ -110,22 +112,10 @@
     };
     
     
+//    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveUrl(\"%@\")",remoteFileUrl];
+//    [self.context evaluateScript:textJS];
     
-    
-//    self.context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-//
-//    NSDictionary *testDic = @{@"locations":locations};
-//    // 字典转字符串 并过滤掉空格及换行符
-//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:testDic options:NSJSONWritingPrettyPrinted error:nil];
-//    NSString *DicString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//    DicString = [DicString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-//    DicString = [DicString stringByReplacingOccurrencesOfString:@"\r" withString:@""];
-//    DicString = [DicString stringByReplacingOccurrencesOfString:@" " withString:@""];
-//
-//
-//
-//    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveUrl(%@)",DicString];
-    
+
     
     
 }
@@ -178,6 +168,14 @@
             
             MyLog(@"%@",responseObject);
             
+            NSDictionary *dict = responseObject[@"data"];
+            if(dict)
+            {
+                
+                NSString *remoteFileUrl = dict[@"data"][@"remoteFileUrl"];
+                NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveUrl(\"%@\")",remoteFileUrl];
+                [self.context evaluateScript:textJS];
+            }
 
             
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -193,6 +191,25 @@
     }];
 }
 
+
+// 扫码回调
+-(void)ScanQR:(NSNotification *)notification
+{
+    NSString *QRString = notification.userInfo[@"QRString"];
+    NSLog(@"%@",QRString);
+    
+    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveCode(\"%@\")",QRString];
+    [self.context evaluateScript:textJS];
+    
+}
+
+
+
+-(void)dealloc
+{
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 
 

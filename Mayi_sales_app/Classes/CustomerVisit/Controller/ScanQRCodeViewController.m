@@ -258,7 +258,16 @@
     NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
     MyLog(@"%@",dictionary);
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ScanQRFinish" object:self userInfo:@{@"QRString":QRString}];
+    if([self.type isEqualToString:@"价格异常"])
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ScanQRFinishForPrice" object:self userInfo:@{@"QRString":QRString}];
+    }
+    else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ScanQRFinish" object:self userInfo:@{@"QRString":QRString}];
+    }
+    
+    
     
     [self backAction];
 
