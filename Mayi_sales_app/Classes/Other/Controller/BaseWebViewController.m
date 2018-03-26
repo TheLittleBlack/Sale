@@ -132,44 +132,52 @@
     
     context[@"scanCode"] = ^(){
         
-        NSLog(@"扫描二维码");
-        
-        ScanQRCodeViewController *SQRC = [ScanQRCodeViewController new];
-        [self.navigationController pushViewController:SQRC animated:YES];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            NSLog(@"扫描二维码");
+            
+            ScanQRCodeViewController *SQRC = [ScanQRCodeViewController new];
+            [self.navigationController pushViewController:SQRC animated:YES];
+            
+        });
+ 
         
     };
     
     context[@"callPhone"] = ^(){
         
-        NSLog(@"打电话");
-        
-        NSArray *args = [JSContext currentArguments];
-        
-        NSString *phoneNumber = args[0];
-        
-        if(phoneNumber&&![phoneNumber isEqualToString:@""]&&![phoneNumber isEqualToString:@"null"])
-        {
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                UIWebView *callWebView = [[UIWebView alloc] init];
-                NSURL *telURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",phoneNumber]];
-                [callWebView loadRequest:[NSURLRequest requestWithURL:telURL]];
-                [self.view addSubview:callWebView];
-                
-            });
+            NSLog(@"打电话");
             
-        }
+            NSArray *args = [JSContext currentArguments];
+            
+            NSString *phoneNumber = args[0];
         
-        
-        MyLog(@"%@",phoneNumber);
-        
+            if(phoneNumber&&![phoneNumber isEqualToString:@""]&&![phoneNumber isEqualToString:@"null"])
+            {
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    UIWebView *callWebView = [[UIWebView alloc] init];
+                    NSURL *telURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",phoneNumber]];
+                    [callWebView loadRequest:[NSURLRequest requestWithURL:telURL]];
+                    [self.view addSubview:callWebView];
+                    
+                });
+                
+            }
+            
+            
+            MyLog(@"%@",phoneNumber);
+            
+            
+            
+        });
+
     };
     
-    
 
-            
-    
     
 }
 
@@ -338,7 +346,6 @@
             
             [Hud stop];
             
-            
             MyLog(@"%@",responseObject);
             
             if([responseObject[@"code"] integerValue]==200)
@@ -359,16 +366,13 @@
             MyLog(@"error = %@",error);
         }];
         
-        
-        
-        
-        
     }];
 }
 
 //点击取消
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
+    
     [picker dismissViewControllerAnimated:YES completion:^{
         
     }];

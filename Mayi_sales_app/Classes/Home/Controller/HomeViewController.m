@@ -17,7 +17,6 @@
 #import "ApplyForViewController.h"
 #import "ResultsQueryViewController.h"
 #import "ActivitiesCheckViewController.h"
-#import "UpdateViewController.h"
 #import "FindReceiveOrdersViewController.h"
 #define cellID @"CellID"
 
@@ -363,13 +362,7 @@
                 
                 [alert addAction:[UIAlertAction actionWithTitle:@"去更新" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     
-                    UpdateViewController * UVC = [UpdateViewController new];
-                    UVC.urlString = dic[@"url"];
-                    [UVC setHidesBottomBarWhenPushed:YES];
-                    [self.navigationController pushViewController:UVC animated:YES];
-                    
-//                    NSString  *urlString = [NSString stringWithFormat:@"http://itunes.apple.com/us/app/id%@",APPID];
-//                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+                    [self goToUpdatePagewith:dic[@"url"]];
                     
                     
                 }]];
@@ -412,12 +405,7 @@
     
     [alert addAction:[UIAlertAction actionWithTitle:@"去更新" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
     
-        UpdateViewController * UVC = [UpdateViewController new];
-        UVC.urlString = url;
-        [UVC setHidesBottomBarWhenPushed:YES];
-        [self.navigationController pushViewController:UVC animated:YES];
-        
-//        [self ForcedUpdateWithURL:url]; 无限循环
+        [self goToUpdatePagewith:url];
         
     }]];
     
@@ -428,7 +416,29 @@
 }
 
 
-
+// 打开 safair 浏览器
+-(void)goToUpdatePagewith:(NSString *)updateUrl
+{
+    NSString * urlStr = [NSString stringWithFormat:@"%@",updateUrl];
+    NSURL *url = [NSURL URLWithString:urlStr];
+    if([[UIDevice currentDevice].systemVersion floatValue] >= 10.0){
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+            [[UIApplication sharedApplication] openURL:url options:@{}
+                                     completionHandler:^(BOOL success) {
+                                         NSLog(@"Open %d",success);
+                                     }];
+        } else {
+            BOOL success = [[UIApplication sharedApplication] openURL:url];
+            NSLog(@"Open  %d",success);
+        }
+        
+    } else{
+        bool can = [[UIApplication sharedApplication] canOpenURL:url];
+        if(can){
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    }
+}
 
 
 

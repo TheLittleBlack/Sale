@@ -73,7 +73,7 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"icon_suaixuan"] style:UIBarButtonItemStylePlain target:self action:@selector(search:)];
     
     _animationTime = 0.2; // 动画时间
-    _buttonHeight = 44 ; // 选择按钮的高度
+    _buttonHeight = 44;   // 选择按钮的高度
     
     if(self.showTopTip)
     {

@@ -29,7 +29,7 @@
 @property (strong,nonatomic)AVCaptureMetadataOutput * output;
 @property (strong,nonatomic)AVCaptureSession * session;
 @property (strong,nonatomic)AVCaptureVideoPreviewLayer * preview;
-@property (strong,nonatomic)UIImageView *QRLogin;
+@property (strong,nonatomic)UIImageView * QRLogin;
 @property (nonatomic, strong) UIImageView * line;
 
 @end
