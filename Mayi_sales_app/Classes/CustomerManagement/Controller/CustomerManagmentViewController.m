@@ -109,6 +109,18 @@
     };
     
     
+    
+    context[@"catchlocal"] = ^(){
+        
+        NSDictionary *dict = @{@"longitude":@(_longitude),@"latitude":@(_latitude),@"address":self.address};
+        NSDictionary *obj = @{@"locations":dict};
+        NSString *json = [self dictionaryToJson:obj];
+        NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation(%@)",json];
+        [self.context evaluateScript:textJS];
+        
+    };
+    
+    
 
     
     
@@ -259,7 +271,7 @@
     
         self.address = response.regeocode.formattedAddress;
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
             
             NSDictionary *dict = @{@"longitude":@(_longitude),@"latitude":@(_latitude),@"address":self.address};
@@ -289,7 +301,10 @@
     return DicString;
 }
 
+// @"{\"locations\":{\"address\":\"广东省深圳市龙岗区坂田街道永香路100号坂田国际中心\",\"longitude\":114.07665798611112,\"latitude\":22.619567328559029}}"
 
 // @"{\"address\":\"广东省深圳市龙岗区坂田街道永香路100号坂田国际中心\",\"longitude\":114.07667371961806,\"latitude\":22.619555664062499}"
+
+// @"{\"locations\":{\"address\":\"广东省深圳市龙岗区坂田街道永香路100号坂田国际中心\",\"longitude\":114.07668023003473,\"latitude\":22.619539930555554}}"
 
 @end
