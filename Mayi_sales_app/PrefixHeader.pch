@@ -16,8 +16,8 @@
 #define MainURL    @"121.43.165.156:18088/api/"
 #define WebMainURL @"121.43.165.156:18088/"
 #elif ConfigureServer == 1
-#define MainURL    @"api.pos.mayi888.com/"
-#define WebMainURL @"121.43.165.156:18088/"
+#define MainURL    @"m.sales.jsy9.cn/api/"
+#define WebMainURL @"m.sales.jsy9.cn/"
 #elif ConfigureServer == 2
 #define MainURL    @"120.27.222.37:28280/"
 #define WebMainURL @"121.43.165.156:18088/"

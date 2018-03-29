@@ -112,14 +112,14 @@
     
     context[@"catchlocal"] = ^(){
         
-        NSDictionary *dict = @{@"longitude":@(_longitude),@"latitude":@(_latitude),@"address":self.address};
-        NSDictionary *obj = @{@"locations":dict};
-        NSString *json = [self dictionaryToJson:obj];
-        NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation(%@)",json];
-        [self.context evaluateScript:textJS];
+        dispatch_async(dispatch_get_main_queue(), ^{
+           
+            NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocationFromApp(\"%@\",\"%@\",\"%@\")",@(_longitude),@(_latitude),self.address];
+            [self.context evaluateScript:textJS];
+            
+        });
         
     };
-    
     
 
     
@@ -137,8 +137,9 @@
     
     if([actionString isEqualToString:@"toPhoto"])
     {
-        
+
         [self openCamera];
+        
        
     }
     
@@ -270,17 +271,6 @@
     {
     
         self.address = response.regeocode.formattedAddress;
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
-            
-            NSDictionary *dict = @{@"longitude":@(_longitude),@"latitude":@(_latitude),@"address":self.address};
-            NSDictionary *obj = @{@"locations":dict};
-            NSString *json = [self dictionaryToJson:obj];
-            NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveLocation(%@)",json];
-            [self.context evaluateScript:textJS];
-            
-        });
         
     }
     else

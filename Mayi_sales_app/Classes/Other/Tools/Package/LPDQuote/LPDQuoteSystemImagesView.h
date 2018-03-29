@@ -48,6 +48,8 @@
 
 @property(nonatomic,assign)NSInteger sessionNumber; // 如果这个类有多个图片占位，用它来得知我们刚才点击的是哪一个图片
 
+@property(nonatomic,assign)BOOL qianMian;
+
 @property (weak, nonatomic) UIViewController<LPDQuoteSystemImagesViewDelegate>* navcDelegate;
 
 - (instancetype)initWithFrame:(CGRect)frame withCountPerRowInView:(NSUInteger)ArrangeCount cellMargin:(CGFloat)cellMargin;

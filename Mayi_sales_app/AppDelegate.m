@@ -186,7 +186,7 @@
     if([UIApplication sharedApplication].applicationState == UIApplicationStateActive){
         //关闭对话框
 //        [UMessage setAutoAlert:NO];
-        [self goToMessageDetails:url];
+//        [self goToMessageDetails:url];
         
     }
     [UMessage didReceiveRemoteNotification:userInfo];
@@ -202,7 +202,7 @@
     NSString *url = userInfo[@"pathUrl"];
     MyLog(@"url:%@",url);
     
-    [self goToMessageDetails:url];
+//    [self goToMessageDetails:url];
     
     //关闭友盟自带的弹出框
     [UMessage setAutoAlert:NO];
@@ -229,7 +229,7 @@
 
     NSString *url = userInfo[@"pathUrl"];
     
-    [self goToMessageDetails:url];
+//    [self goToMessageDetails:url];
 }
 
 

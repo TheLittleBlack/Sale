@@ -240,6 +240,10 @@
         UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
         if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
             self.imagePickerVc.sourceType = sourceType;
+            if(self.qianMian)
+            {
+                self.imagePickerVc.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+            }
             if(iOS8Later) {
                 _imagePickerVc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
             }

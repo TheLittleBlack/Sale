@@ -22,6 +22,8 @@
 @property(nonatomic,strong)NSMutableArray *orderNumberArray;
 @property(nonatomic,strong)NSMutableArray *nameArrey;
 @property(nonatomic,strong)NSMutableArray *cacheArray;
+@property(nonatomic,strong)UIImageView *wuneirongImageView;
+@property(nonatomic,strong)UILabel *wuneirongLabel;
 
 @end
 
@@ -64,8 +66,53 @@
     
     [self.view addSubview:self.tableView];
     
+    
+    
+    [self.view addSubview:self.wuneirongImageView];
+    [self.wuneirongImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+       
+        make.width.and.height.mas_equalTo(86);
+        make.centerX.equalTo(self.view);
+        make.top.equalTo(self.view).offset(200);
+        
+    }];
+    
+    [self.view addSubview:self.wuneirongLabel];
+    [self.wuneirongLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+       
+        make.left.and.right.equalTo(self.view);
+        make.top.equalTo(self.wuneirongImageView.mas_bottom).offset(15);
+        make.height.mas_equalTo(22);
+        
+    }];
+    
 
     
+}
+
+-(UIImageView *)wuneirongImageView
+{
+    if(!_wuneirongImageView)
+    {
+        _wuneirongImageView = [UIImageView new];
+        _wuneirongImageView.image = [UIImage imageNamed:@"wuleirong"];
+        _wuneirongImageView.hidden = YES;
+    }
+    return _wuneirongImageView;
+}
+
+-(UILabel *)wuneirongLabel
+{
+    if(!_wuneirongLabel)
+    {
+        _wuneirongLabel = [UILabel new];
+        _wuneirongLabel.font = [UIFont systemFontOfSize:15];
+        _wuneirongLabel.textAlignment = NSTextAlignmentCenter;
+        _wuneirongLabel.textColor = [UIColor blackColor];
+        _wuneirongLabel.text = @"没有内容";
+        _wuneirongLabel.hidden = YES;
+    }
+    return _wuneirongLabel;
 }
 
 -(UIButton *)searchButton
@@ -253,15 +300,22 @@
         {
             NSArray *targetArray = result[@"data"][@"data"][@"list"];
             
-            if(targetArray.count>0)
+            if(![targetArray isEqual:[NSNull null]] &&targetArray.count>0)
             {
                 self.dataSource = [NSMutableArray arrayWithArray:targetArray];
                 self.cacheArray = [NSMutableArray arrayWithArray:targetArray];
+            }
+            else
+            {
+                self.wuneirongImageView.hidden = NO;
+                self.wuneirongLabel.hidden = NO;
             }
         }
         else
         {
             [Hud showText:result[@"data"][@"message"]];
+            self.wuneirongImageView.hidden = NO;
+            self.wuneirongLabel.hidden = NO;
         }
         
         [self.tableView reloadData];
@@ -275,6 +329,14 @@
 -(void)searchAction
 {
     NSLog(@"搜索:%@",self.textField.text);
+    
+    if([self.textField.text isEqualToString:@""])
+    {
+        self.dataSource = [NSMutableArray arrayWithArray:self.cacheArray];
+        [self.tableView reloadData];
+        
+        return ;
+    }
     
     [self.dataSource removeAllObjects];
     
@@ -319,6 +381,25 @@
 {
     [self.view endEditing:YES];
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

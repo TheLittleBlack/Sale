@@ -301,7 +301,11 @@
     
     imagrPicker.sourceType = UIImagePickerControllerSourceTypeCamera; // UIImagePickerControllerSourceTypePhotoLibrary
     
-    [self presentViewController:imagrPicker animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:imagrPicker animated:YES completion:nil];
+    });
+    
+    
     
 }
 
@@ -343,8 +347,34 @@
             if([responseObject[@"code"] integerValue]==200)
             {
                 
-                [Hud showText:@"上传成功"];
+//                [Hud showText:@"上传成功"];
+//
+//                NSDictionary *dict = responseObject[@"data"];
+//                if(dict)
+//                {
+//
+//                    NSString *remoteFileUrl = dict[@"data"][@"remoteFileUrl"];
+//                    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveUrl(\"%@\")",remoteFileUrl];
+//                    [self.context evaluateScript:textJS];
+//                }
+
+                
+                [Hud stop];
+                
+                MyLog(@"%@",responseObject);
+                
                 NSDictionary *dict = responseObject[@"data"];
+                if(dict)
+                {
+                    NSString *remoteFileUrl = dict[@"data"][@"remoteFileUrl"];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveUrl(\"%@\")",remoteFileUrl];
+                        [self.context evaluateScript:textJS];
+                        
+                    });
+                }
                 
             }
             

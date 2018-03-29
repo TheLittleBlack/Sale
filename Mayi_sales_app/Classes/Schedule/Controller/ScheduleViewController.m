@@ -77,7 +77,7 @@
     [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:CollectTheSwitch] withPrameters:@{} result:^(id result) {
         
         NSLog(@"%@",result);
-        NSArray *array = result[@"data"];
+        NSArray *array = result[@"data"][@"data"];
         if(array.count>0)
         {
             for (NSString *subData in array) {
@@ -91,7 +91,6 @@
     } error:^(id error) {
         
     } withHUD:NO];
-    
     
 }
 

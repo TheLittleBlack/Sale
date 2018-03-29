@@ -186,34 +186,34 @@
         {
             cell.iconImageView.image = [UIImage imageNamed:@"icon_huifang 3"];
         }
-        else if (type==3)
+        else if (type==3) // 广告
+        {
+            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
+            cell.rightButton.hidden = NO;
+            cell.finishImageView.hidden = YES;
+        }
+        else if (type==4) // 陈列
+        {
+            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
+            cell.rightButton.hidden = NO;
+            cell.finishImageView.hidden = YES;
+        }
+        else if(type==5) // 品鉴
+        {
+            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
+            cell.rightButton.hidden = NO;
+            cell.finishImageView.hidden = YES;
+        }
+        else if(type==6) // 自定义
+        {
+            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
+            cell.rightButton.hidden = NO;
+            cell.finishImageView.hidden = YES;
+        }
+        else if(type==7) // 婚喜宴
         {
             cell.iconImageView.image = [UIImage imageNamed:@"icon_hunyan 3"];
-            cell.rightButton.hidden = YES;
-            cell.finishImageView.hidden = YES;
-        }
-        else if (type==4)
-        {
-            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
-            cell.rightButton.hidden = YES;
-            cell.finishImageView.hidden = YES;
-        }
-        else if(type==5)
-        {
-            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
-            cell.rightButton.hidden = YES;
-            cell.finishImageView.hidden = YES;
-        }
-        else if(type==6)
-        {
-            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
-            cell.rightButton.hidden = YES;
-            cell.finishImageView.hidden = YES;
-        }
-        else if(type==7)
-        {
-            cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
-            cell.rightButton.hidden = YES;
+            cell.rightButton.hidden = NO;
             cell.finishImageView.hidden = YES;
         }
         
@@ -243,21 +243,6 @@
         return;
     }
     
-    NSInteger type = [itemData[@"businessType"] integerValue];
-    
-    if(type==3 ||type==4 ||type==5 ||type==7 )
-    {
-        BaseWebViewController *BWVC = [BaseWebViewController new];
-        BWVC.urlString = [NSString stringWithFormat:@"%@/%@",[MayiURLManage MayiWebURLManageWithURL:TaskCheck],itemData[@"businessKey"]]; // 或者是itemData[@"id"]
-        BWVC.hidesBottomBarWhenPushed = YES;
-        [self.currentVC.navigationController pushViewController:BWVC animated:YES];
-    }
-    
-    // 自定义特殊跳转
-    if(type==6)
-    {
-        NSLog(@"自定义特殊跳转");
-    }
     
 }
 
@@ -464,6 +449,34 @@
 
 -(void)CellRightButtonAction:(UIButton *)sender andSelectID:(NSString *)visitID andBusinessKey:(NSInteger)businessKey andType:(NSInteger)type andStoreName:(NSString *)storeName
 {
+    
+    
+    if(type==3 ||type==4 ||type==5 ||type==7 )
+    {
+        BaseWebViewController *BWVC = [BaseWebViewController new];
+        BWVC.urlString = [NSString stringWithFormat:@"%@/%@",[MayiURLManage MayiWebURLManageWithURL:TaskCheck],@(businessKey)];
+        BWVC.hidesBottomBarWhenPushed = YES;
+        [self.currentVC.navigationController pushViewController:BWVC animated:YES];
+        return;
+    }
+    
+    // 自定义特殊跳转
+    if(type==6)
+    {
+        BaseWebViewController *BWVC = [BaseWebViewController new];
+        BWVC.urlString = [NSString stringWithFormat:@"%@/%@",[MayiURLManage MayiWebURLManageWithURL:CustomTask],@(businessKey)];
+        BWVC.hidesBottomBarWhenPushed = YES;
+        [self.currentVC.navigationController pushViewController:BWVC animated:YES];
+        
+        NSLog(@"自定义特殊跳转");
+        return;
+    }
+    
+    
+    
+    
+    
+    
     if([sender.titleLabel.text isEqualToString:@"继续"])
     {
         MyLog(@"继续");

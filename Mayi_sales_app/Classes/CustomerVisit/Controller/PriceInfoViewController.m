@@ -112,11 +112,6 @@
     };
     
     
-//    NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveUrl(\"%@\")",remoteFileUrl];
-//    [self.context evaluateScript:textJS];
-    
-
-    
     
 }
 
@@ -129,7 +124,9 @@
     
     imagrPicker.sourceType = UIImagePickerControllerSourceTypeCamera; // UIImagePickerControllerSourceTypePhotoLibrary
     
-    [self presentViewController:imagrPicker animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:imagrPicker animated:YES completion:nil];
+    });
     
 }
 
@@ -171,7 +168,6 @@
             NSDictionary *dict = responseObject[@"data"];
             if(dict)
             {
-                
                 NSString *remoteFileUrl = dict[@"data"][@"remoteFileUrl"];
                 NSString *textJS = [NSString stringWithFormat:@"Hybrid.reciveUrl(\"%@\")",remoteFileUrl];
                 [self.context evaluateScript:textJS];

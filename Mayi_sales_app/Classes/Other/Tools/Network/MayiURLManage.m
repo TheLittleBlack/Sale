@@ -271,6 +271,12 @@
             baseURL = @"#/visitPriceList/"; // 价格异常
         }
             break;
+        case CustomTask:
+        {
+            baseURL = @"#/task/diyCheck"; // 自定义任务跳转
+        }
+            break;
+   
 
 
     }

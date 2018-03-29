@@ -19,7 +19,7 @@
 #define HeaderViewHeight 130
 #define TimerCountDown 60  //定时器倒计时
 
-@interface SaoMaShouHuoViewController ()<UITableViewDelegate,UITableViewDataSource,MAMapViewDelegate,AMapSearchDelegate,SaoMaShouHuoFootViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface SaoMaShouHuoViewController ()<UITableViewDelegate,UITableViewDataSource,MAMapViewDelegate,AMapSearchDelegate,SaoMaShouHuoFootViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,SaoMaShouHuoTableViewCellDelegate>
 
 {
     BOOL _canlocation;
@@ -49,6 +49,10 @@
 @property(nonatomic,strong)NSTimer *timer;
 @property(nonatomic,strong)NSString *address;
 @property(nonatomic,strong)NSMutableArray *barCodes; // 成功收货才数组
+@property(nonatomic,strong)NSMutableArray *originalBarCodes; // 该订单包含的所有二维码
+@property(nonatomic,strong)NSMutableArray *relations; // 每一箱的信息
+@property(nonatomic,assign)NSInteger updateBottomBox; // 更新底部的合计数量
+@property(nonatomic,assign)NSInteger targetNumber; // 要更新第几个cell
 
 @end
 
@@ -198,8 +202,48 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ScanQR:) name:@"ScanQRFinish" object:nil];
     
+    
+    NSArray *array = self.data[@"orderItems"];
+    for (int i=0; i<array.count; i++) {
+        
+        NSDictionary *item = array[i];
+        NSArray *relations = item[@"relations"];
+        
+        self.relations = [NSMutableArray arrayWithArray:relations];
+        
+        for (int j=0; j<relations.count; j++) {
+            
+            NSDictionary *subItem = relations[j];
+            NSString *barCode = subItem[@"barCode"];
+             [self.originalBarCodes addObject:barCode];
+        }
+    
+    }
+    
+    
+    NSLog(@"%@",self.originalBarCodes);
+    
 }
 
+-(NSMutableArray *)relations
+{
+    if(!_relations)
+    {
+        _relations = [NSMutableArray new];
+        
+    }
+    return _relations;
+}
+
+-(NSMutableArray *)originalBarCodes
+{
+    if(!_originalBarCodes)
+    {
+        _originalBarCodes = [NSMutableArray new];
+        
+    }
+    return _originalBarCodes;
+}
 
 -(UIView *)headerView
 {
@@ -445,6 +489,7 @@
 {
     NSDictionary *subData = self.dataSource[indexPath.row];
     SaoMaShouHuoTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellID forIndexPath:indexPath];
+    cell.delegate = self;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.titleLabel.text = [NSString stringWithFormat:@"%@",subData[@"pdtName"]];
@@ -455,15 +500,60 @@
         imageUrl = [imageUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]; // 图片可能带有中文名，需要进行编码
         [cell.logoImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",imageUrl]]];
     }
-    cell.boxNumberLabel.text = [NSString stringWithFormat:@"箱码:%@",[subData[@"barCode"] isEqual:[NSNull null]]?@"":subData[@"barCode"]];
+    
+    //
+    NSInteger ageCount = 0;
+    NSArray *relations = subData[@"relations"];
+    for (int j=0; j<relations.count; j++) {
+        
+        NSDictionary *subItem = relations[j];
+        NSInteger receiveStatus = [subItem[@"receiveStatus"] integerValue];
+        if(receiveStatus == 1)
+        {
+            ageCount ++;
+        }
+    }
+    
+    //
+    
+    
+    
+    
+    
+    
+    //
+    
+    NSInteger yisao = [self getNumberForRow:indexPath.row];
+    
+    //
+    
+    
+  
     NSString *qtyReceived = [subData[@"qtyReceived"] isEqual:[NSNull null]]?@"0":subData[@"qtyReceived"];
     NSString *convertNumber = [subData[@"convertNumber"] isEqual:[NSNull null]]?@"0":subData[@"convertNumber"];
     NSInteger convert = [convertNumber integerValue];
-    cell.yiSaoMiaoLabel.text = [NSString stringWithFormat:@"已扫%lu箱",[qtyReceived integerValue]/convert];
+    cell.boxNumberLabel.text = [NSString stringWithFormat:@"箱码:%ld",[qtyReceived integerValue]/convert];
+    cell.yiSaoMiaoLabel.text = [NSString stringWithFormat:@"已扫%ld箱",[qtyReceived integerValue]/convert];
     NSString *qtyShipped = [subData[@"qtyShipped"] isEqual:[NSNull null]]?@"0":subData[@"qtyShipped"];
-    cell.gongJiXiangLabel.text = [NSString stringWithFormat:@"共%lu箱",[qtyShipped integerValue]/convert];
+    if(ageCount>0)
+    {
+        cell.gongJiXiangLabel.text = [NSString stringWithFormat:@"(订单总计%ld箱,过去已签收%ld箱)",[qtyShipped integerValue]/convert,ageCount];
+    }
+    else
+    {
+        cell.gongJiXiangLabel.text = [NSString stringWithFormat:@"(订单总计%ld箱)",[qtyShipped integerValue]/convert];
+    }
     NSInteger queShao = ([qtyShipped integerValue] - [qtyReceived integerValue])/convert;
-    cell.shaoJiXiangLabel.text = [NSString stringWithFormat:@"少%lu箱",queShao];
+    cell.shaoJiXiangLabel.text = [NSString stringWithFormat:@"待签收%lu箱",(long)queShao];
+    cell.index = indexPath.row;
+    if([self showLookBoxButton:indexPath.row])
+    {
+        cell.LookBoxButton.hidden = NO;
+    }
+    else
+    {
+        cell.LookBoxButton.hidden = YES;
+    }
 
     return cell;
 }
@@ -480,7 +570,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 100;
+    return 120;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
@@ -551,6 +641,11 @@
 // 点击拍照按钮
 -(void)takePhote
 {
+    if(self.photo)
+    {
+        return;
+    }
+    
     [self openCamera];
 }
 
@@ -778,9 +873,6 @@
         }];
         
         
-        
-        
-        
     }];
 }
 
@@ -798,6 +890,11 @@
         
     }
     
+    if(self.updateBottomBox)
+    {
+        return [NSString stringWithFormat:@"%lu",self.updateBottomBox];
+    }
+    
     return [NSString stringWithFormat:@"%lu",number];
 }
 
@@ -808,8 +905,109 @@
     NSString *QRString = notification.userInfo[@"QRString"];
     NSLog(@"%@",QRString);
     
-    [self updateDate];
+    // 检测是否关联
+    BOOL Exist = NO;
+    
+    if(self.originalBarCodes.count>0)
+    {
+        for (int i=0; i<self.originalBarCodes.count; i++) {
+            
+            NSString *code = self.originalBarCodes[i];
+            if([code isEqualToString:QRString])
+            {
+                Exist = YES;
+            }
+            
+        }
+    }
+    
+    
+    if(!Exist)
+    {
+        [Hud showText:[NSString stringWithFormat:@"%@码未和订单关联",QRString]];
+        return;
+    }
+    
 
+    // 检测是否已扫
+    BOOL exist = NO;
+    
+    if(self.barCodes.count>0)
+    {
+        for (int i=0; i<self.barCodes.count; i++) {
+            
+            NSString *code = self.barCodes[i];
+            if([code isEqualToString:QRString])
+            {
+                exist = YES;
+            }
+            
+        }
+    }
+
+    if(exist)
+    {
+        [Hud showText:[NSString stringWithFormat:@"%@此码已扫",QRString]];
+        return;
+    }
+    
+    // 再次检测是否已扫
+    BOOL EXIST = NO;
+    NSArray *array = self.data[@"orderItems"];
+    for (int i=0; i<array.count; i++) {
+        
+        NSDictionary *item = array[i];
+        NSArray *relations = item[@"relations"];
+        
+        for (int j=0; j<relations.count; j++) {
+            
+            NSDictionary *subItem = relations[j];
+            NSInteger receiveStatus = [subItem[@"receiveStatus"] integerValue];
+            if(receiveStatus == 1 && [QRString isEqualToString:[NSString stringWithFormat:@"%@",subItem[@"barCode"]]])
+            {
+                NSLog(@"%@",subItem);
+                EXIST = YES;
+            }
+        }
+        
+    }
+    
+    if(EXIST)
+    {
+        [Hud showText:[NSString stringWithFormat:@"%@此码已扫",QRString]];
+        return;
+    }
+    
+    
+    
+    if(self.relations.count>0)
+    {
+        
+        NSArray *array = self.data[@"orderItems"];
+        for (int i=0; i<array.count; i++) {
+            
+            NSDictionary *item = array[i];
+            NSArray *relations = item[@"relations"];
+            
+            self.relations = [NSMutableArray arrayWithArray:relations];
+            
+            for (int j=0; j<relations.count; j++) {
+                
+                NSDictionary *item = relations[j];
+                NSString *barCode = item[@"barCode"];
+                if([barCode isEqualToString:QRString])
+                {
+                    self.targetNumber = i;   // 拿到要更新的cell的index
+                    break;
+                }
+
+            }
+            
+        }
+        
+        
+    }
+    
     [MyNetworkRequest postRequestWithUrl:[MayiURLManage MayiURLManageWithURL:ScanReceive] withPrameters:@{@"orderSn":self.data[@"orderSn"],@"barCode":QRString} result:^(id result) {
         
         [Hud showText:result[@"data"][@"data"][@"message"]];
@@ -817,11 +1015,23 @@
         NSInteger errorType = [result[@"data"][@"data"][@"errorType"] integerValue];
         if(errorType==0)
         {
-            NSLog(@"收货成功");
-            [self.barCodes addObject:QRString];
+            NSLog(@"验收成功");
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self updateDate];
+            [self.barCodes addObject:QRString];
+            self.updateBottomBox = self.barCodes.count;
+            self.bottomLeftLabel.text = [NSString stringWithFormat:@"合计: %lu箱",self.barCodes.count];
+            
+            // 替换 qtyReceived
+            NSDictionary *subData = self.dataSource[self.targetNumber];
+            NSInteger qtyReceived = [subData[@"qtyReceived"] integerValue];
+            NSInteger convert = [subData[@"convertNumber"] integerValue];
+            [subData setValue:[NSString stringWithFormat:@"%lu",qtyReceived+convert] forKey:@"qtyReceived"];
+            self.dataSource[self.targetNumber] = subData;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [self.tableView reloadData];
+                
             });
             
         }
@@ -855,14 +1065,20 @@
         
         NSArray *targetArray = result[@"data"][@"data"][@"list"];
         for (NSDictionary *data in targetArray) {
-            if(data[@"orderSn"]==self.data[@"orderSn"])
+            if([data[@"orderSn"] isEqualToString:self.data[@"orderSn"]])
             {
+                [self.dataSource removeAllObjects];
                 self.data = data;
+                self.dataSource = [NSMutableArray arrayWithArray:data[@"orderItems"]];
             }
         }
  
-        [self.tableView reloadData];
-        self.bottomLeftLabel.text = [NSString stringWithFormat:@"合计: %@箱",[self dealAllBox]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.tableView reloadData];
+            self.bottomLeftLabel.text = [NSString stringWithFormat:@"合计: %@箱",[self dealAllBox]];
+        });
         
     } error:^(id error) {
         
@@ -933,7 +1149,7 @@
     for (NSDictionary *data in self.dataSource) {
         
         NSString *qtyReceivedStr = [data[@"qtyReceived"] isEqual:[NSNull null]]?@"0":data[@"qtyReceived"];
-        NSString *qtyStr = [data[@"qty"] isEqual:[NSNull null]]?@"0":data[@"qty"];
+        NSString *qtyStr = [data[@"qtyShipped"] isEqual:[NSNull null]]?@"0":data[@"qtyShipped"];
         NSString *convertNumberStr = [data[@"convertNumber"] isEqual:[NSNull null]]?@"0":data[@"convertNumber"];
         NSInteger qtyReceived = [qtyReceivedStr integerValue];
         NSInteger qty = [qtyStr integerValue];
@@ -950,8 +1166,130 @@
     
 }
 
+// 判断是否显示箱码按钮
+-(BOOL)showLookBoxButton:(NSInteger)index
+{
+    
+    NSDictionary *item = self.dataSource[index];
+    NSArray *codeArray = item[@"relations"];
+    NSMutableArray *targetArray = [NSMutableArray new];
+    for (int i =0 ; i < codeArray.count; i++) {
+        [targetArray addObject:codeArray[i][@"barCode"]];
+    }
+
+    
+    
+    if(self.barCodes.count>0)
+    {
+        
+        for (int i=0 ; i < self.barCodes.count ; i++) {
+            
+            NSString *barCode = self.barCodes[i];
+            
+            for (int j=0; j<targetArray.count; j++) {
+                NSString *subitem = targetArray[j];
+                if([subitem isEqualToString:barCode])
+                {
+                    return YES;
+                }
+            }
+            
+            
+        }
+        
+    }
+    return NO;
+}
+
+// 获取本行商品已扫了几箱
+-(NSInteger)getNumberForRow:(NSInteger)index
+{
+    
+    NSDictionary *item = self.dataSource[index];
+    NSArray *codeArray = item[@"relations"];
+    NSMutableArray *targetArray = [NSMutableArray new];
+    for (int i =0 ; i < codeArray.count; i++) {
+        [targetArray addObject:codeArray[i][@"barCode"]];
+    }
+    
+    NSInteger k = 0;
+    
+    if(self.barCodes.count>0)
+    {
+        
+        for (int i=0 ; i < self.barCodes.count ; i++) {
+            
+            NSString *barCode = self.barCodes[i];
+            
+            for (int j=0; j<targetArray.count; j++) {
+                NSString *subitem = targetArray[j];
+                if([subitem isEqualToString:barCode])
+                {
+                    k++;
+                }
+            }
+            
+            
+        }
+        
+    }
+    
+    return k;
+    
+}
 
 
+// cell 的buttin
+-(void)lookButtonWidthIndex:(NSInteger)index;
+{
+    
+    
+    NSArray *array = self.data[@"orderItems"];
+    NSDictionary *item = array[index];
+    NSArray *codeArray = item[@"relations"];
+    NSMutableArray *targetArray = [NSMutableArray new];
+    for (int i =0 ; i < codeArray.count; i++) {
+        [targetArray addObject:codeArray[i][@"barCode"]];
+    }
+        
+    NSString *message = @"";
+    
+    if(self.barCodes.count>0)
+    {
+        
+        for (int i=0 ; i < self.barCodes.count ; i++) {
+            
+            NSString *barCode = self.barCodes[i];
+            
+            for (int j=0; j<targetArray.count; j++) {
+                NSString *subitem = targetArray[j];
+                if([subitem isEqualToString:barCode])
+                {
+                    message = [NSString stringWithFormat:@"%@\n%@",message,barCode];
+                }
+            }
+            
+            
+        }
+        
+    }
+    
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"箱码展示" message:message preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    
+    // 为了不产生延时的现象，直接放在主线程中调用
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self presentViewController:alert animated:YES completion:^{
+        }];
+        
+    });
+}
 
 
 

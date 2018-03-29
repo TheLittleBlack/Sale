@@ -24,6 +24,7 @@
         [self addSubview:self.gongJiXiangLabel];
         [self addSubview:self.shaoJiXiangLabel];
         [self addSubview:self.boxNumberLabel];
+        [self addSubview:self.LookBoxButton];
         
     }
     return self;
@@ -71,6 +72,21 @@
     return _boxNumberLabel;
 }
 
+-(UIButton *)LookBoxButton
+{
+    if(!_LookBoxButton)
+    {
+        _LookBoxButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _LookBoxButton.titleLabel.font = [UIFont systemFontOfSize:15];
+        _LookBoxButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+        [_LookBoxButton setTitle:@"点击查看" forState:UIControlStateNormal];
+        [_LookBoxButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [_LookBoxButton addTarget:self action:@selector(LookBoxButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        
+    }
+    return _LookBoxButton;
+}
+
 -(UILabel *)yiSaoMiaoLabel
 {
     if(!_yiSaoMiaoLabel)
@@ -89,7 +105,7 @@
     if(!_gongJiXiangLabel)
     {
         _gongJiXiangLabel = [UILabel new];
-        _gongJiXiangLabel.font = [UIFont systemFontOfSize:15];
+        _gongJiXiangLabel.font = [UIFont systemFontOfSize:13];
         _gongJiXiangLabel.textAlignment = NSTextAlignmentLeft;
         _gongJiXiangLabel.textColor = [UIColor colorWithWhite:0/255.0 alpha:1];
         _gongJiXiangLabel.text = @"共0箱";
@@ -104,7 +120,7 @@
         _shaoJiXiangLabel = [UILabel new];
         _shaoJiXiangLabel.font = [UIFont systemFontOfSize:15];
         _shaoJiXiangLabel.textAlignment = NSTextAlignmentLeft;
-        _shaoJiXiangLabel.textColor = MainColor;
+        _shaoJiXiangLabel.textColor = [UIColor colorWithWhite:100/255.0 alpha:1];;
         _shaoJiXiangLabel.text = @"少0箱";
     }
     return _shaoJiXiangLabel;
@@ -131,43 +147,66 @@
         
     }];
     
-
-    
-    CGFloat LabelWidth = [@"已扫00箱" sizeWithAttributes:@{NSFontAttributeName:self.yiSaoMiaoLabel.font}].width + 2;
-    
-    [self.yiSaoMiaoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        make.left.equalTo(self.titleLabel);
-        make.bottom.equalTo(self.mas_bottom).offset(-8);
-        make.width.mas_equalTo(LabelWidth);
-        
-    }];
-    
-    [self.gongJiXiangLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-       
-        make.left.equalTo(self.yiSaoMiaoLabel.mas_right).offset(5);
-        make.centerY.and.width.equalTo(self.yiSaoMiaoLabel);
-        
-    }];
-    
-    [self.shaoJiXiangLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-       
-        make.left.equalTo(self.gongJiXiangLabel.mas_right).offset(5);
-        make.centerY.and.width.equalTo(self.yiSaoMiaoLabel);
-        
-    }];
-    
     [self.boxNumberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         
         make.left.equalTo(self.titleLabel);
-        make.bottom.equalTo(self.yiSaoMiaoLabel.mas_top).offset(-5);
-        make.width.mas_equalTo(self.titleLabel);
+        make.top.equalTo(self.titleLabel.mas_bottom).offset(5);
+        make.width.mas_equalTo(65);
         
     }];
     
     
+    [self.LookBoxButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.left.equalTo(self.boxNumberLabel.mas_right);
+        make.centerY.equalTo(self.boxNumberLabel);
+        make.width.mas_equalTo(ScreenWidth/3);
+        make.height.equalTo(self.boxNumberLabel);
+        
+    }];
+    
+
+    [self.gongJiXiangLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        
+        make.left.equalTo(self.titleLabel);
+        make.bottom.equalTo(self.mas_bottom).offset(-8);
+        make.width.mas_equalTo(ScreenWidth/2);
+        
+    }];
+    
+    
+
+    CGFloat LabelWidth = [@"已扫000箱" sizeWithAttributes:@{NSFontAttributeName:self.yiSaoMiaoLabel.font}].width + 2;
+
+    [self.yiSaoMiaoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+
+        make.left.equalTo(self.titleLabel);
+        make.top.equalTo(self.boxNumberLabel.mas_bottom).offset(5);
+        make.width.mas_equalTo(LabelWidth);
+
+    }];
+
+
+    [self.shaoJiXiangLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+
+        make.left.equalTo(self.yiSaoMiaoLabel.mas_right).offset(10);
+        make.centerY.equalTo(self.yiSaoMiaoLabel);
+        make.right.equalTo(self).offset(-5);
+
+    }];
+
+
     
 }
 
+
+-(void)LookBoxButtonAction
+{
+    
+    if(self.delegate && [self.delegate respondsToSelector:@selector(lookButtonWidthIndex:)]){
+        [self.delegate lookButtonWidthIndex:self.index];
+    }
+    
+}
 
 @end

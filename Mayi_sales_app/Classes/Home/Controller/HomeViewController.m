@@ -135,27 +135,34 @@
 {
     if(!_dataSource)
     {
+        // 因为首页按钮有更新，次方法纯粹是为了更新而已
+        NSString *updateString = [[NSUserDefaults standardUserDefaults] valueForKey:@"更新首页"];
+        
+        NSArray *array = @[
+                           @{@"iconName":@"icon_xianlu",@"title":@"线路拜访"},
+                           @{@"iconName":@"icon_houdong",@"title":@"活动检查"},
+                           @{@"iconName":@"icon_tuanguo",@"title":@"团购管理"},
+                           @{@"iconName":@"icon_kehu",@"title":@"客户管理"},
+                           @{@"iconName":@"icon_shenpi",@"title":@"协同审批"},
+                           @{@"iconName":@"icon_dindan",@"title":@"订单管理"},
+                           //                               @{@"iconName":@"icon_yeji",@"title":@"业绩查询"},
+                           @{@"iconName":@"icon_rizhi",@"title":@"工作日志"},
+                           @{@"iconName":@"work_task_logo",@"title":@"扫码收货"},
+                           ];
+        
         MyLog(@"%@",[MYManage defaultManager].userName);
         NSMutableDictionary *userInfo = [[NSUserDefaults standardUserDefaults] valueForKey:[MYManage defaultManager].passport];
-        if(!userInfo)
+        if(!userInfo || !updateString)
         {
             
-            NSArray *array = @[
-                               @{@"iconName":@"icon_xianlu",@"title":@"线路拜访"},
-                               @{@"iconName":@"icon_houdong",@"title":@"活动检查"},
-                               @{@"iconName":@"icon_tuanguo",@"title":@"团购管理"},
-                               @{@"iconName":@"icon_kehu",@"title":@"客户管理"},
-                               @{@"iconName":@"icon_shenpi",@"title":@"协同审批"},
-                               @{@"iconName":@"icon_dindan",@"title":@"订单管理"},
-                               @{@"iconName":@"icon_yeji",@"title":@"业绩查询"},
-                               @{@"iconName":@"icon_rizhi",@"title":@"工作日志"},
-                               @{@"iconName":@"work_task_logo",@"title":@"扫码收货"},
-                               ];
             _dataSource = [NSMutableArray arrayWithArray:array];
             
             NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary:@{@"homeIconSorting":array,@"GGTZlastTime":@"",@"SPSWlastTime":@"",@"ZSFXlastTime":@"",@"GZXXlastTime":@""}];
             [[NSUserDefaults standardUserDefaults] setValue:info forKey:[NSString stringWithFormat:@"%@",[MYManage defaultManager].passport]];
             MyLog(@"");
+            
+            // 因为首页按钮有更新，次方法纯粹是为了更新而已
+            [[NSUserDefaults standardUserDefaults] setObject:@"哈哈哈" forKey:@"更新首页"];
             
         }
         else

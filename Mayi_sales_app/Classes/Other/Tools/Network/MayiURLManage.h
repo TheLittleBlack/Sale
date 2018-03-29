@@ -62,6 +62,7 @@ typedef NS_ENUM(NSUInteger,MayiWebUrlType) {
     TaskPool, // 添加任务
     CompetingGoodsCollection, // 竞品收集
     PriceAnomalies, // 价格异常
+    CustomTask, // 自定义任务跳转
     
 };
 

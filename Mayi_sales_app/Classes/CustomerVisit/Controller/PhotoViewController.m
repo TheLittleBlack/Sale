@@ -106,11 +106,15 @@
     
  
     
-    [self addPhotoSelectPackageWithTitle:@"*自拍照" top:15 maxPhotoNum:5 WithLPDQuoteSystemImagesView:self.ZiPaiZhao andNumber:2 underLine:YES withDownloadImageArray:self.ziPaiZhaoArrayDownload];
+
+    
+    [self addPhotoSelectPackageWithTitle:@"*陈列照" top:15 maxPhotoNum:5 WithLPDQuoteSystemImagesView:self.chenLieZhao andNumber:1 underLine:NO withDownloadImageArray:self.chenLieZhaoArrayDownload];
     
     [self addPhotoSelectPackageWithTitle:@"*门头照" top:15+134 maxPhotoNum:5 WithLPDQuoteSystemImagesView:self.menTouZhao andNumber:0 underLine:YES withDownloadImageArray:self.menTouZhaoArrayDownload];
+    
+    [self addPhotoSelectPackageWithTitle:@"*自拍照" top:15+134*2 maxPhotoNum:5 WithLPDQuoteSystemImagesView:self.ZiPaiZhao andNumber:2 underLine:YES withDownloadImageArray:self.ziPaiZhaoArrayDownload];
 
-    [self addPhotoSelectPackageWithTitle:@"*陈列照" top:15+134*2 maxPhotoNum:5 WithLPDQuoteSystemImagesView:self.chenLieZhao andNumber:1 underLine:NO withDownloadImageArray:self.chenLieZhaoArrayDownload];
+
 
 
     
@@ -134,6 +138,10 @@
     
     //设置大小 每行多少个预览图 间距
     ImagesView = [[LPDQuoteSystemImagesView alloc] initWithFrame:CGRectMake(15, top+15, ScreenWidth-30, 100) withCountPerRowInView:4 cellMargin:12];
+    if(number==2)
+    {
+        ImagesView.qianMian = YES;
+    }
     //设置选择图片的最大数值
     ImagesView.maxSelectedCount = maxNum;
     //是否可滚动
