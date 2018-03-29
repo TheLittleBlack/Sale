@@ -177,7 +177,8 @@
         // 如果竞品信息的开关打开了
         if([MYManage defaultManager].isJPSJ)
         {
-            [_dataSource addObject:@"* 竞品信息"];
+//            [_dataSource addObject:@"* 竞品信息"];
+            [_dataSource insertObject:@"* 竞品信息" atIndex:3];
         }
         
     }
@@ -257,6 +258,8 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    NSString *title = self.dataSource[indexPath.section];
     if(indexPath.section==0)
     {
         if ([CLLocationManager locationServicesEnabled] && ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways)) {
@@ -320,15 +323,20 @@
         [self.navigationController pushViewController:PIVC animated:YES];
         
     }
-    if(indexPath.section==3)
+    
+    
+    // 这里有可能加入竞品信息 改为用title判断
+    
+    if([title containsString:@"订单执行"])
     {
+        NSLog(@"订单执行");
         OrderViewController *OVC = [OrderViewController new];
         OVC.urlString = [[NSString stringWithFormat:@"%@/2/%@/%@/%@",[MayiURLManage MayiWebURLManageWithURL:OrderDown],self.visitData[@"custNo"],self.visitData[@"storeName"],self.visitID] URLEncodedString];
         OVC.autoManageBack = NO;
         [OVC setHidesBottomBarWhenPushed:YES] ;
         [self.navigationController pushViewController:OVC animated:YES];
     }
-    if(indexPath.section==4)
+    if([title containsString:@"拜访情况"])
     {
         MyLog(@"拜访情况");
         VisitCaseViewController *VCC = [VisitCaseViewController new];
@@ -338,7 +346,7 @@
         VCC.saveVisitPhoto = _saveVisitPhoto;
         [self.navigationController pushViewController:VCC animated:YES];
     }
-    if(indexPath.section==5&&[MYManage defaultManager].isJPSJ)
+    if([title containsString:@"竞品信息"]&&[MYManage defaultManager].isJPSJ)
     {
         NSLog(@"竞品信息"); // ↓ 这里与上面的价格信息相似，只是URL不同
         PriceInfoViewController *PIVC = [PriceInfoViewController new];
@@ -361,12 +369,12 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 0;
+    return 0.1;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 0;
+    return 0.1;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section

@@ -190,31 +190,31 @@
         {
             cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
             cell.rightButton.hidden = NO;
-            cell.finishImageView.hidden = YES;
+//            cell.finishImageView.hidden = YES;
         }
         else if (type==4) // 陈列
         {
             cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
             cell.rightButton.hidden = NO;
-            cell.finishImageView.hidden = YES;
+//            cell.finishImageView.hidden = YES;
         }
         else if(type==5) // 品鉴
         {
             cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
             cell.rightButton.hidden = NO;
-            cell.finishImageView.hidden = YES;
+//            cell.finishImageView.hidden = YES;
         }
         else if(type==6) // 自定义
         {
             cell.iconImageView.image = [UIImage imageNamed:@"icon_jiancha"];
             cell.rightButton.hidden = NO;
-            cell.finishImageView.hidden = YES;
+//            cell.finishImageView.hidden = YES;
         }
         else if(type==7) // 婚喜宴
         {
             cell.iconImageView.image = [UIImage imageNamed:@"icon_hunyan 3"];
             cell.rightButton.hidden = NO;
-            cell.finishImageView.hidden = YES;
+//            cell.finishImageView.hidden = YES;
         }
         
         
@@ -233,12 +233,36 @@
     }
     NSDictionary *itemData = self.dataSourceArray[indexPath.row];
     NSInteger status = [itemData[@"status"] integerValue];
+    NSInteger type = [itemData[@"businessType"] integerValue];
+    NSInteger businessKey = ![itemData[@"businessKey"] isEqual:[NSNull null]]?[itemData[@"businessKey"] integerValue]:0;
+    
     if(status==3)
     {
+        
+        
+        if(type==3 ||type==4 ||type==5 ||type==7 )
+        {
+            BaseWebViewController *BWVC = [BaseWebViewController new];
+            BWVC.urlString = [NSString stringWithFormat:@"%@/%@",[MayiURLManage MayiWebURLManageWithURL:TaskCheck],@(businessKey)];
+            BWVC.hidesBottomBarWhenPushed = YES;
+            [self.currentVC.navigationController pushViewController:BWVC animated:YES];
+            return ;
+            
+        }
+        
+        
         BaseWebViewController *BWVC = [BaseWebViewController new];
         BWVC.urlString = [NSString stringWithFormat:@"%@%@&0",[MayiURLManage MayiWebURLManageWithURL:VisitDetails],itemData[@"id"]];
         BWVC.hidesBottomBarWhenPushed = YES;
         [self.currentVC.navigationController pushViewController:BWVC animated:YES];
+        
+        
+        
+
+        
+        
+        
+        
         
         return;
     }

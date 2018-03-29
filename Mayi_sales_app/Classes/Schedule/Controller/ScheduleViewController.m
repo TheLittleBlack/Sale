@@ -100,7 +100,7 @@
     _selectDateString = @" ";
     _showBeginButton = YES;
     _isFirst = YES;
-    
+    _pickerSelectData = @"婚喜宴检查"; // 默认选中婚喜宴
     
     self.navigationItem.title = @"我的任务";
     self.automaticallyAdjustsScrollViewInsets = NO;

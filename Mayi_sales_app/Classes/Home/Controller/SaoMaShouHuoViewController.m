@@ -53,6 +53,7 @@
 @property(nonatomic,strong)NSMutableArray *relations; // 每一箱的信息
 @property(nonatomic,assign)NSInteger updateBottomBox; // 更新底部的合计数量
 @property(nonatomic,assign)NSInteger targetNumber; // 要更新第几个cell
+@property(nonatomic,strong)NSMutableArray *errorArray; // 收集错误信息的数组
 
 @end
 
@@ -69,6 +70,7 @@
     
     self.navigationItem.title = @"扫码收货";
     self.view.backgroundColor = [UIColor whiteColor];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[[UIImage imageNamed:@"icon_fanghui"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
     
@@ -533,7 +535,7 @@
     NSString *convertNumber = [subData[@"convertNumber"] isEqual:[NSNull null]]?@"0":subData[@"convertNumber"];
     NSInteger convert = [convertNumber integerValue];
     cell.boxNumberLabel.text = [NSString stringWithFormat:@"箱码:%ld",[qtyReceived integerValue]/convert];
-    cell.yiSaoMiaoLabel.text = [NSString stringWithFormat:@"已扫%ld箱",[qtyReceived integerValue]/convert];
+    cell.yiSaoMiaoLabel.text = [NSString stringWithFormat:@"已扫%ld箱",yisao];
     NSString *qtyShipped = [subData[@"qtyShipped"] isEqual:[NSNull null]]?@"0":subData[@"qtyShipped"];
     if(ageCount>0)
     {
@@ -543,7 +545,7 @@
     {
         cell.gongJiXiangLabel.text = [NSString stringWithFormat:@"(订单总计%ld箱)",[qtyShipped integerValue]/convert];
     }
-    NSInteger queShao = ([qtyShipped integerValue] - [qtyReceived integerValue])/convert;
+    NSInteger queShao = [qtyShipped integerValue]/convert - ageCount;
     cell.shaoJiXiangLabel.text = [NSString stringWithFormat:@"待签收%lu箱",(long)queShao];
     cell.index = indexPath.row;
     if([self showLookBoxButton:indexPath.row])
@@ -560,7 +562,8 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 130;
+    NSInteger count = self.errorArray.count;
+    return 150 + count*20;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -577,6 +580,13 @@
 {
     SaoMaShouHuoFootView *footView = [self.tableView dequeueReusableHeaderFooterViewWithIdentifier:tableHeaderID];
     footView.delegate = self;
+    NSString *errText = @"";
+    for (int i=0; i<self.errorArray.count; i++) {
+        NSString * subText = self.errorArray[i];
+        errText = [NSString stringWithFormat:@"%@\n%@",errText,subText];
+    }
+    footView.errorLabel.text = errText;
+    
     if(self.photo)
     {
         [footView.imageButton setImage:self.photo forState:UIControlStateNormal];
@@ -718,6 +728,12 @@
             }];
             
         });
+    }
+    
+    
+    if(number==0)
+    {
+        [self shouHuo];
     }
     
     
@@ -925,6 +941,15 @@
     if(!Exist)
     {
         [Hud showText:[NSString stringWithFormat:@"%@码未和订单关联",QRString]];
+        [self.errorArray addObject:[NSString stringWithFormat:@"%@码未和订单关联",QRString]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.tableView reloadData];
+            
+        });
+        
+        
         return;
     }
     
@@ -948,6 +973,14 @@
     if(exist)
     {
         [Hud showText:[NSString stringWithFormat:@"%@此码已扫",QRString]];
+        [self.errorArray addObject:[NSString stringWithFormat:@"%@此码已扫",QRString]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.tableView reloadData];
+            
+        });
+        
         return;
     }
     
@@ -975,6 +1008,16 @@
     if(EXIST)
     {
         [Hud showText:[NSString stringWithFormat:@"%@此码已扫",QRString]];
+        [self.errorArray addObject:[NSString stringWithFormat:@"%@此码已扫",QRString]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.tableView reloadData];
+            
+        });
+        
+        
+        
         return;
     }
     
@@ -1028,22 +1071,35 @@
             [subData setValue:[NSString stringWithFormat:@"%lu",qtyReceived+convert] forKey:@"qtyReceived"];
             self.dataSource[self.targetNumber] = subData;
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                [self.tableView reloadData];
-                
-            });
-            
         }
+        else
+        {
+            [self.errorArray addObject:[NSString stringWithFormat:@"%@",result[@"data"][@"data"][@"message"]]];
+        }
+    
         
     } error:^(id error) {
         
     } withHUD:YES];
     
     
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self.tableView reloadData];
+        
+    });
+    
+    
 }
 
-
+-(NSMutableArray *)errorArray
+{
+    if(!_errorArray)
+    {
+        _errorArray = [NSMutableArray new];
+    }
+    return _errorArray;
+}
 
 
 -(void)updateDate
@@ -1290,9 +1346,6 @@
         
     });
 }
-
-
-
 
 
 

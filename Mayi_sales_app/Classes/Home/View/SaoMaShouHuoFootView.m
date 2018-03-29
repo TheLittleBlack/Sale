@@ -21,7 +21,7 @@
            
             make.left.equalTo(self).offset(20);
             make.top.equalTo(self).offset(20);
-            make.bottom.equalTo(self).offset(-10);
+            make.height.mas_equalTo(100);
             make.width.equalTo(self.imageButton.mas_height);
             
         }];
@@ -36,6 +36,15 @@
         }];
         
         self.deleteButton.hidden = YES;
+        
+        [self addSubview:self.errorLabel];
+        [self.errorLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            
+            make.left.equalTo(self).offset(5);
+            make.right.equalTo(self).offset(-5);
+            make.top.equalTo(self.imageButton.mas_bottom).offset(10);
+            
+        }];
         
     }
     
@@ -78,6 +87,20 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(deleteAction)]){
         [self.delegate deleteAction];
     }
+}
+
+-(UILabel *)errorLabel
+{
+    if(!_errorLabel)
+    {
+        _errorLabel = [UILabel new];
+        _errorLabel.font = [UIFont systemFontOfSize:14];
+        _errorLabel.textAlignment = NSTextAlignmentLeft;
+        _errorLabel.textColor = [UIColor colorWithWhite:50/255.0 alpha:1];
+        _errorLabel.text = @"阿萨德华和速度哈湖师大hi安徽丢按时的还是毒奶US会丢安徽省丢阿斯达斯UN咦打死uaisdaidijaidnaisniajdoiajsiod啊数据库DNA加拿大建电死的";
+        _errorLabel.numberOfLines = 0;
+    }
+    return _errorLabel;
 }
 
 

@@ -108,7 +108,7 @@
         _wuneirongLabel = [UILabel new];
         _wuneirongLabel.font = [UIFont systemFontOfSize:15];
         _wuneirongLabel.textAlignment = NSTextAlignmentCenter;
-        _wuneirongLabel.textColor = [UIColor blackColor];
+        _wuneirongLabel.textColor = [UIColor colorWithWhite:100/255.0 alpha:1];
         _wuneirongLabel.text = @"没有内容";
         _wuneirongLabel.hidden = YES;
     }
@@ -176,6 +176,7 @@
     {
         _dataSource = [NSMutableArray new];
     }
+    
     return _dataSource;
 }
 
@@ -203,6 +204,7 @@
     {
         _cacheArray = [NSMutableArray new];
     }
+    
     return _cacheArray;
 }
 
@@ -304,6 +306,8 @@
             {
                 self.dataSource = [NSMutableArray arrayWithArray:targetArray];
                 self.cacheArray = [NSMutableArray arrayWithArray:targetArray];
+                self.wuneirongImageView.hidden = YES;
+                self.wuneirongLabel.hidden = YES;
             }
             else
             {
@@ -333,6 +337,8 @@
     if([self.textField.text isEqualToString:@""])
     {
         self.dataSource = [NSMutableArray arrayWithArray:self.cacheArray];
+        self.wuneirongImageView.hidden = YES;
+        self.wuneirongLabel.hidden = YES;
         [self.tableView reloadData];
         
         return ;
@@ -361,6 +367,16 @@
         
     }
     
+    if(self.dataSource.count==0)
+    {
+        self.wuneirongImageView.hidden = NO;
+        self.wuneirongLabel.hidden = NO;
+    }
+    else
+    {
+        self.wuneirongImageView.hidden = YES;
+        self.wuneirongLabel.hidden = YES;
+    }
     
     [self.tableView reloadData];
     
