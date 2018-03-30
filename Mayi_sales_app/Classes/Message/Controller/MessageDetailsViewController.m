@@ -24,6 +24,8 @@
     UIButton *_lastStateButton;
     CGFloat _animationTime;
     CGFloat _buttonHeight;
+    NSInteger _page; // 页
+    NSInteger _row; // 行
 }
 
 @property(nonatomic,strong)MessageTopButton *topButton;
@@ -74,6 +76,8 @@
     
     _animationTime = 0.2; // 动画时间
     _buttonHeight = 44;   // 选择按钮的高度
+    _page = 1;
+    _row = 10;
     
     if(self.showTopTip)
     {
@@ -377,11 +381,11 @@
     
     if(isread==2) // 全部
     {
-        prameters = @{@"page":@"1",@"rows":@"50",@"searchType":@(self.type)};
+        prameters = @{@"page":@"1",@"rows":@"100",@"searchType":@(self.type)};
     }
     else
     {
-        prameters = @{@"page":@"1",@"rows":@"50",@"searchType":@(self.type),@"isRead":@(isread)};
+        prameters = @{@"page":@"1",@"rows":@"100",@"searchType":@(self.type),@"isRead":@(isread)};
     }
     
     
@@ -537,6 +541,7 @@
         _tableView.contentInset = UIEdgeInsetsMake(-35, 0, 0, 0);
         _tableView.separatorInset = UIEdgeInsetsZero;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.mj_footer = [MJRefreshAutoStateFooter footerWithRefreshingTarget:self refreshingAction:@selector(footerRefresh)];
         
     }
     return _tableView;
@@ -739,5 +744,10 @@
     
 }
 
+-(void)footerRefresh
+{
+    NSLog(@"上拉加载");
+    _page ++;
+}
 
 @end

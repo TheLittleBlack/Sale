@@ -39,6 +39,7 @@
 #import "MayiURLManage.h"
 #import "MyNetworkRequest.h"
 #import "MYManage.h"
+#import <MJRefresh.h>
 //#import "MyAFNetWorking.h"
 
 //屏幕宽高缩放比

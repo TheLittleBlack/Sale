@@ -62,7 +62,7 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[[UIImage imageNamed:@"icon_guanli"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]  style:UIBarButtonItemStylePlain target:self action:@selector(rightBarButtonAction)];
     
-    self.collectionView = [[SDMajletView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64-49) ];
+    self.collectionView = [[SDMajletView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64-49)];
     self.collectionView.inUseTitles = [NSMutableArray arrayWithArray:self.dataSource];
     self.collectionView.delegate = self;
     [self.view addSubview:self.collectionView];

@@ -37,12 +37,23 @@
         
         self.deleteButton.hidden = YES;
         
+
+        [self addSubview:self.errorTitle];
+        [self.errorTitle mas_makeConstraints:^(MASConstraintMaker *make) {
+           
+            make.left.equalTo(self).offset(5);
+            make.right.equalTo(self).offset(-5);
+            make.top.equalTo(self.imageButton.mas_bottom).offset(10);
+            
+        }];
+        
+        
         [self addSubview:self.errorLabel];
         [self.errorLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             
             make.left.equalTo(self).offset(5);
             make.right.equalTo(self).offset(-5);
-            make.top.equalTo(self.imageButton.mas_bottom).offset(10);
+            make.top.equalTo(self.errorTitle.mas_bottom).offset(0);
             
         }];
         
@@ -89,6 +100,20 @@
     }
 }
 
+-(UILabel *)errorTitle
+{
+    if(!_errorTitle)
+    {
+        _errorTitle = [UILabel new];
+        _errorTitle.font = [UIFont systemFontOfSize:18];
+        _errorTitle.textAlignment = NSTextAlignmentLeft;
+        _errorTitle.textColor = [UIColor colorWithWhite:50/255.0 alpha:1];
+        _errorTitle.text = @"异常信息码";
+        _errorTitle.numberOfLines = 0;
+    }
+    return _errorTitle;
+}
+
 -(UILabel *)errorLabel
 {
     if(!_errorLabel)
@@ -97,7 +122,7 @@
         _errorLabel.font = [UIFont systemFontOfSize:14];
         _errorLabel.textAlignment = NSTextAlignmentLeft;
         _errorLabel.textColor = [UIColor colorWithWhite:50/255.0 alpha:1];
-        _errorLabel.text = @"阿萨德华和速度哈湖师大hi安徽丢按时的还是毒奶US会丢安徽省丢阿斯达斯UN咦打死uaisdaidijaidnaisniajdoiajsiod啊数据库DNA加拿大建电死的";
+        _errorLabel.text = @" ";
         _errorLabel.numberOfLines = 0;
     }
     return _errorLabel;

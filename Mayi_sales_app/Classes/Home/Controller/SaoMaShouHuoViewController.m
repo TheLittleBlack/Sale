@@ -199,7 +199,7 @@
     [self.mapView reloadMap];
     
     
-    self.bottomLeftLabel.text = [NSString stringWithFormat:@"合计: %@箱",[self dealAllBox]];
+    self.bottomLeftLabel.text = [NSString stringWithFormat:@"合计: %@箱",@(self.barCodes.count)];
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ScanQR:) name:@"ScanQRFinish" object:nil];
@@ -222,7 +222,6 @@
     
     }
     
-    
     NSLog(@"%@",self.originalBarCodes);
     
 }
@@ -232,7 +231,6 @@
     if(!_relations)
     {
         _relations = [NSMutableArray new];
-        
     }
     return _relations;
 }
@@ -527,6 +525,7 @@
     
     NSInteger yisao = [self getNumberForRow:indexPath.row];
     
+    
     //
     
     
@@ -534,7 +533,7 @@
     NSString *qtyReceived = [subData[@"qtyReceived"] isEqual:[NSNull null]]?@"0":subData[@"qtyReceived"];
     NSString *convertNumber = [subData[@"convertNumber"] isEqual:[NSNull null]]?@"0":subData[@"convertNumber"];
     NSInteger convert = [convertNumber integerValue];
-    cell.boxNumberLabel.text = [NSString stringWithFormat:@"箱码:%ld",[qtyReceived integerValue]/convert];
+    cell.boxNumberLabel.text = [NSString stringWithFormat:@"箱码:%ld",yisao];
     cell.yiSaoMiaoLabel.text = [NSString stringWithFormat:@"已扫%ld箱",yisao];
     NSString *qtyShipped = [subData[@"qtyShipped"] isEqual:[NSNull null]]?@"0":subData[@"qtyShipped"];
     if(ageCount>0)
@@ -551,6 +550,7 @@
     if([self showLookBoxButton:indexPath.row])
     {
         cell.LookBoxButton.hidden = NO;
+
     }
     else
     {
@@ -563,7 +563,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     NSInteger count = self.errorArray.count;
-    return 150 + count*20;
+    return 180 + count*20;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -586,6 +586,15 @@
         errText = [NSString stringWithFormat:@"%@\n%@",errText,subText];
     }
     footView.errorLabel.text = errText;
+    
+    if(self.errorArray.count>0)
+    {
+        footView.errorTitle.hidden = NO;
+    }
+    else
+    {
+        footView.errorTitle.hidden = YES;
+    }
     
     if(self.photo)
     {
@@ -766,6 +775,7 @@
         NSInteger ok = [result[@"data"][@"ok"] integerValue];
         if(ok)
         {
+            [Hud showText:@"收货成功"];
             [self.navigationController popViewControllerAnimated:YES];
         }
         
@@ -949,11 +959,11 @@
             
         });
         
-        
         return;
     }
     
 
+    
     // 检测是否已扫
     BOOL exist = NO;
     
@@ -1071,6 +1081,13 @@
             [subData setValue:[NSString stringWithFormat:@"%lu",qtyReceived+convert] forKey:@"qtyReceived"];
             self.dataSource[self.targetNumber] = subData;
             
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [self.tableView reloadData];
+                
+            });
+            
+            
         }
         else
         {
@@ -1105,7 +1122,7 @@
 -(void)updateDate
 {
     
-    NSDictionary *prameters = @{@"page":@"1",@"rows":@"50"};
+    NSDictionary *prameters = @{@"page":@"1",@"rows":@"100"};
     
     // 字典转字符串 并过滤掉空格及换行符
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:prameters options:NSJSONWritingPrettyPrinted error:nil];
@@ -1133,7 +1150,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [self.tableView reloadData];
-            self.bottomLeftLabel.text = [NSString stringWithFormat:@"合计: %@箱",[self dealAllBox]];
+            self.bottomLeftLabel.text = [NSString stringWithFormat:@"合计: %@箱",self.barCodes.count];
         });
         
     } error:^(id error) {

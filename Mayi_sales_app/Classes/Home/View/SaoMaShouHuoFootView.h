@@ -22,6 +22,7 @@
 @property(nonatomic,strong)UIButton *imageButton;
 @property(nonatomic,strong)UIButton *deleteButton; // 删除按钮
 @property(nonatomic,weak)id <SaoMaShouHuoFootViewDelegate> delegate;
+@property(nonatomic,strong)UILabel *errorTitle;
 @property(nonatomic,strong)UILabel *errorLabel; // 显示错误信息
 
 @end
