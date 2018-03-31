@@ -50,6 +50,8 @@
 {
     [super viewWillAppear:animated];
     
+    _page = 1;
+    
     if(self.currentIsRed)
     {
        [self networkRequestisRead:self.currentIsRed isHud:NO];
@@ -381,11 +383,11 @@
     
     if(isread==2) // 全部
     {
-        prameters = @{@"page":@"1",@"rows":@"100",@"searchType":@(self.type)};
+        prameters = @{@"page":@(_page),@"rows":@(_row),@"searchType":@(self.type)};
     }
     else
     {
-        prameters = @{@"page":@"1",@"rows":@"100",@"searchType":@(self.type),@"isRead":@(isread)};
+        prameters = @{@"page":@(_page),@"rows":@(_row),@"searchType":@(self.type),@"isRead":@(isread)};
     }
     
     
@@ -402,7 +404,20 @@
         
         NSArray *targetArray = result[@"data"][@"data"][@"records"];
         
-        self.dataSource = [NSMutableArray arrayWithArray:targetArray];
+        if(_page==1)
+        {
+            self.dataSource = [NSMutableArray arrayWithArray:targetArray];
+            
+            if(self.dataSource.count<_row)
+            {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+            }
+        }
+        else
+        {
+            [self.dataSource addObjectsFromArray:targetArray];
+        }
+        
         
         if(isread==2)
         {
@@ -441,6 +456,7 @@
         }
         
         [self.tableView reloadData];
+        [self.tableView.mj_footer endRefreshing];
         
     } error:^(id error) {
         
@@ -747,7 +763,21 @@
 -(void)footerRefresh
 {
     NSLog(@"上拉加载");
+    
     _page ++;
+    
+    if(self.currentIsRed)
+    {
+        [self networkRequestisRead:self.currentIsRed isHud:NO];
+    }
+    else
+    {
+        [self networkRequestisRead:2 isHud:YES];
+        self.currentIsRed = 2;
+        
+    }
+    
+    
 }
 
 @end
